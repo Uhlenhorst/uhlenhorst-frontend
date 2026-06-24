@@ -276,11 +276,14 @@
 
 <header id="appHeader" style="display:none;">
   <div class="header-title">
-    <span class="name">Auf der Uhlenhorst</span>
-    <span class="tag">Admin</span>
+    <a href="auf-der-uhlenhorst-home.html" style="color:var(--white); display:flex; align-items:baseline; gap:10px;">
+      <span class="name">Auf der Uhlenhorst</span>
+      <span class="tag">Admin</span>
+    </a>
   </div>
   <div class="header-right">
     <span id="adminName"></span>
+    <button class="btn-logout-sm" onclick="window.location.href='auf-der-uhlenhorst-home.html'" style="margin-right:4px;">Startseite</button>
     <button class="btn-logout-sm" onclick="logout()">Abmelden</button>
   </div>
 </header>
@@ -319,6 +322,14 @@
 
   <div id="listContainer">
     <div class="loading-row">Lädt ausstehende Einträge …</div>
+  </div>
+
+  <div class="page-head" style="margin-top:48px;">
+    <div class="eyebrow">Geschäftsverzeichnis</div>
+    <h1>Freigegebene Geschäfte</h1>
+  </div>
+  <div id="approvedContainer">
+    <div class="loading-row">Lädt freigegebene Geschäfte …</div>
   </div>
 </main>
 
@@ -433,8 +444,69 @@
       document.getElementById('statTotal').textContent = all.length + pending.length;
 
       renderList(pending);
+      renderApprovedList(all);
     } catch (err) {
       container.innerHTML = '<div class="loading-row">Verbindung zum Server fehlgeschlagen.</div>';
+    }
+  }
+
+  function renderApprovedList(items) {
+    const container = document.getElementById('approvedContainer');
+
+    if (items.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">–</div>
+          <h3>Noch keine freigegebenen Geschäfte</h3>
+          <p>Sobald du Einträge freigibst, erscheinen sie hier.</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = items.map(biz => `
+      <div class="request-card" id="approved-${biz.id}">
+        <div class="request-top">
+          <div>
+            <div class="request-name">${escapeHtml(biz.name)}</div>
+            <span class="request-cat">${escapeHtml(biz.category)}</span>
+          </div>
+        </div>
+        <div class="request-details">
+          <strong>Adresse:</strong> ${escapeHtml(biz.address)}<br>
+          ${biz.description ? `<strong>Beschreibung:</strong> ${escapeHtml(biz.description)}<br>` : ''}
+        </div>
+        <div class="request-actions">
+          <button class="btn-reject" style="flex:none; padding:10px 18px;" onclick="deleteBusiness('${biz.id}', '${escapeHtml(biz.name).replace(/'/g, "\\'")}')">Löschen</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function deleteBusiness(id, name) {
+    if (!confirm(`„${name}" wirklich endgültig aus dem Verzeichnis löschen?`)) return;
+
+    const card = document.getElementById(`approved-${id}`);
+    if (card) card.querySelectorAll('button').forEach(b => b.disabled = true);
+
+    try {
+      const res = await fetch(`${API_BASE}/businesses/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast(data.error || 'Löschen fehlgeschlagen.', true);
+        if (card) card.querySelectorAll('button').forEach(b => b.disabled = false);
+        return;
+      }
+
+      showToast('Geschäft gelöscht.');
+      if (card) card.style.opacity = '0';
+      setTimeout(() => loadPendingBusinesses(), 300);
+    } catch (err) {
+      showToast('Verbindung zum Server fehlgeschlagen.', true);
+      if (card) card.querySelectorAll('button').forEach(b => b.disabled = false);
     }
   }
 
