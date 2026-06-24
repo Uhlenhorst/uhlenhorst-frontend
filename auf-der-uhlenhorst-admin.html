@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – Auf der Uhlenhorst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep: #0A2A43;
+    --water: #13456B;
+    --water-light: #2E6690;
+    --white: #FFFFFF;
+    --mist: #E8EDF2;
+    --gold: #C9A24B;
+    --ink: #0E1B26;
+    --success: #1E6B44;
+    --success-bg: #E7F3EC;
+    --danger: #B3261E;
+    --danger-bg: #FDECEA;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    background: var(--mist);
+    min-height: 100vh;
+  }
+
+  h1, h2, .display { font-family: 'Fraunces', serif; font-weight: 600; }
+
+  /* Header */
+  header {
+    background: var(--deep);
+    color: var(--white);
+    padding: 18px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .header-title {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .header-title .name { font-size: 1.15rem; }
+  .header-title .tag {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.75);
+  }
+  .btn-logout-sm {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: var(--white);
+    padding: 7px 14px;
+    border-radius: 5px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-logout-sm:hover { border-color: var(--white); }
+
+  /* Gate screen (not logged in / not admin) */
+  .gate {
+    max-width: 420px;
+    margin: 90px auto;
+    background: var(--white);
+    border-radius: 10px;
+    padding: 40px 36px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+  }
+  .gate h2 { color: var(--deep); margin-bottom: 10px; font-size: 1.3rem; }
+  .gate p { color: #5c6e79; font-size: 0.92rem; margin-bottom: 22px; line-height: 1.5; }
+  .gate input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d8e0e6;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-size: 0.94rem;
+  }
+  .gate input:focus { outline: none; border-color: var(--water); }
+  .gate button {
+    width: 100%;
+    padding: 12px;
+    background: var(--deep);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.94rem;
+    cursor: pointer;
+  }
+  .gate button:hover { background: var(--water); }
+  .gate-error {
+    background: var(--danger-bg);
+    color: var(--danger);
+    font-size: 0.84rem;
+    padding: 9px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    display: none;
+  }
+  .gate-error.show { display: block; }
+
+  /* Main content */
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 36px 28px 80px;
+    display: none;
+  }
+  main.active { display: block; }
+
+  .page-head {
+    margin-bottom: 28px;
+  }
+  .page-head .eyebrow {
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--water);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .page-head h1 { font-size: 1.9rem; color: var(--deep); }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 18px 20px;
+    border: 1px solid #dfe6eb;
+  }
+  .stat-card .num {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    color: var(--deep);
+  }
+  .stat-card .label {
+    font-size: 0.78rem;
+    color: #6b7d89;
+    margin-top: 2px;
+  }
+
+  .empty-state {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 50px 30px;
+    text-align: center;
+    border: 1px dashed #c5cdd3;
+  }
+  .empty-state .icon { font-size: 2rem; margin-bottom: 12px; }
+  .empty-state h3 { color: var(--deep); font-family: 'Fraunces', serif; margin-bottom: 6px; }
+  .empty-state p { color: #6b7d89; font-size: 0.88rem; }
+
+  .request-card {
+    background: var(--white);
+    border-radius: 8px;
+    border: 1px solid #dfe6eb;
+    padding: 22px 24px;
+    margin-bottom: 14px;
+  }
+  .request-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  .request-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    color: var(--deep);
+  }
+  .request-cat {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--water);
+    background: rgba(19,69,107,0.08);
+    padding: 3px 9px;
+    border-radius: 3px;
+    margin-top: 6px;
+  }
+  .request-meta {
+    font-size: 0.82rem;
+    color: #8294a0;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .request-details {
+    font-size: 0.88rem;
+    color: #44545e;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .request-details strong { color: var(--deep); }
+  .request-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .btn-approve, .btn-reject {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.86rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-approve { background: var(--success); color: var(--white); }
+  .btn-approve:hover { opacity: 0.85; }
+  .btn-reject { background: var(--white); color: var(--danger); border: 1px solid #f0c4c0; }
+  .btn-reject:hover { background: var(--danger-bg); }
+  .btn-approve:disabled, .btn-reject:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--deep);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.error { background: var(--danger); }
+
+  .loading-row {
+    text-align: center;
+    padding: 40px;
+    color: #8294a0;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 640px) {
+    .stats-row { grid-template-columns: 1fr; }
+    .request-top { flex-direction: column; }
+    .request-meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<header id="appHeader" style="display:none;">
+  <div class="header-title">
+    <span class="name">Auf der Uhlenhorst</span>
+    <span class="tag">Admin</span>
+  </div>
+  <div class="header-right">
+    <span id="adminName"></span>
+    <button class="btn-logout-sm" onclick="logout()">Abmelden</button>
+  </div>
+</header>
+
+<!-- Login Gate -->
+<div class="gate" id="gateView">
+  <h2>Admin-Anmeldung</h2>
+  <p>Melde dich mit deinem Admin-Konto an, um eingereichte Geschäfte zu prüfen.</p>
+  <div class="gate-error" id="gateError"></div>
+  <input type="email" id="gateEmail" placeholder="E-Mail-Adresse">
+  <input type="password" id="gatePassword" placeholder="Passwort">
+  <button onclick="login()" id="loginBtn">Anmelden</button>
+</div>
+
+<!-- Main Dashboard -->
+<main id="mainView">
+  <div class="page-head">
+    <div class="eyebrow">Geschäftsverzeichnis</div>
+    <h1>Ausstehende Einträge</h1>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="num" id="statPending">–</div>
+      <div class="label">Warten auf Prüfung</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="statApproved">–</div>
+      <div class="label">Freigegeben</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="statTotal">–</div>
+      <div class="label">Gesamt im Verzeichnis</div>
+    </div>
+  </div>
+
+  <div id="listContainer">
+    <div class="loading-row">Lädt ausstehende Einträge …</div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API_BASE = 'https://uhlenhorst-backend.onrender.com/api';
+  let token = localStorage.getItem('uhlenhorst_token');
+  let user = JSON.parse(localStorage.getItem('uhlenhorst_user') || 'null');
+
+  function showToast(text, isError) {
+    const t = document.getElementById('toast');
+    t.textContent = text;
+    t.className = 'toast show' + (isError ? ' error' : '');
+    setTimeout(() => t.className = 'toast', 3000);
+  }
+
+  function showGateError(text) {
+    const el = document.getElementById('gateError');
+    el.textContent = text;
+    el.classList.add('show');
+  }
+
+  async function login() {
+    const email = document.getElementById('gateEmail').value.trim();
+    const password = document.getElementById('gatePassword').value;
+    const btn = document.getElementById('loginBtn');
+
+    if (!email || !password) {
+      showGateError('Bitte E-Mail und Passwort eingeben.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Einen Moment …';
+
+    try {
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showGateError(data.error || 'Anmeldung fehlgeschlagen.');
+        btn.disabled = false;
+        btn.textContent = 'Anmelden';
+        return;
+      }
+
+      if (data.user.role !== 'admin') {
+        showGateError('Dieses Konto hat keine Admin-Rechte.');
+        btn.disabled = false;
+        btn.textContent = 'Anmelden';
+        return;
+      }
+
+      token = data.token;
+      user = data.user;
+      localStorage.setItem('uhlenhorst_token', token);
+      localStorage.setItem('uhlenhorst_user', JSON.stringify(user));
+      enterDashboard();
+    } catch (err) {
+      showGateError('Verbindung zum Server fehlgeschlagen.');
+      btn.disabled = false;
+      btn.textContent = 'Anmelden';
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('uhlenhorst_token');
+    localStorage.removeItem('uhlenhorst_user');
+    token = null;
+    user = null;
+    document.getElementById('appHeader').style.display = 'none';
+    document.getElementById('mainView').classList.remove('active');
+    document.getElementById('gateView').style.display = 'block';
+  }
+
+  function enterDashboard() {
+    document.getElementById('gateView').style.display = 'none';
+    document.getElementById('appHeader').style.display = 'flex';
+    document.getElementById('mainView').classList.add('active');
+    document.getElementById('adminName').textContent = user.name;
+    loadPendingBusinesses();
+  }
+
+  async function loadPendingBusinesses() {
+    const container = document.getElementById('listContainer');
+    container.innerHTML = '<div class="loading-row">Lädt ausstehende Einträge …</div>';
+
+    try {
+      const [pendingRes, allRes] = await Promise.all([
+        fetch(`${API_BASE}/businesses/ausstehend`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        }),
+        fetch(`${API_BASE}/businesses`)
+      ]);
+
+      if (pendingRes.status === 401 || pendingRes.status === 403) {
+        showToast('Sitzung abgelaufen. Bitte erneut anmelden.', true);
+        logout();
+        return;
+      }
+
+      const pending = await pendingRes.json();
+      const all = await allRes.json();
+
+      document.getElementById('statPending').textContent = pending.length;
+      document.getElementById('statApproved').textContent = all.length;
+      document.getElementById('statTotal').textContent = all.length + pending.length;
+
+      renderList(pending);
+    } catch (err) {
+      container.innerHTML = '<div class="loading-row">Verbindung zum Server fehlgeschlagen.</div>';
+    }
+  }
+
+  function renderList(items) {
+    const container = document.getElementById('listContainer');
+
+    if (items.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">✓</div>
+          <h3>Alles geprüft</h3>
+          <p>Aktuell warten keine Geschäfte auf Freigabe.</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = items.map(biz => `
+      <div class="request-card" id="card-${biz.id}">
+        <div class="request-top">
+          <div>
+            <div class="request-name">${escapeHtml(biz.name)}</div>
+            <span class="request-cat">${escapeHtml(biz.category)}</span>
+          </div>
+          <div class="request-meta">
+            Eingereicht von<br>${escapeHtml(biz.owner_email || 'Unbekannt')}
+          </div>
+        </div>
+        <div class="request-details">
+          <strong>Adresse:</strong> ${escapeHtml(biz.address)}<br>
+          ${biz.description ? `<strong>Beschreibung:</strong> ${escapeHtml(biz.description)}<br>` : ''}
+          ${biz.phone ? `<strong>Telefon:</strong> ${escapeHtml(biz.phone)}<br>` : ''}
+          ${biz.website ? `<strong>Website:</strong> ${escapeHtml(biz.website)}` : ''}
+        </div>
+        <div class="request-actions">
+          <button class="btn-approve" onclick="reviewBusiness('${biz.id}', 'freigegeben')">Freigeben</button>
+          <button class="btn-reject" onclick="reviewBusiness('${biz.id}', 'abgelehnt')">Ablehnen</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function reviewBusiness(id, status) {
+    const card = document.getElementById(`card-${id}`);
+    card.querySelectorAll('button').forEach(b => b.disabled = true);
+
+    try {
+      const res = await fetch(`${API_BASE}/businesses/${id}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast(data.error || 'Aktion fehlgeschlagen.', true);
+        card.querySelectorAll('button').forEach(b => b.disabled = false);
+        return;
+      }
+
+      showToast(status === 'freigegeben' ? 'Geschäft freigegeben.' : 'Geschäft abgelehnt.');
+      card.style.opacity = '0';
+      setTimeout(() => loadPendingBusinesses(), 300);
+    } catch (err) {
+      showToast('Verbindung zum Server fehlgeschlagen.', true);
+      card.querySelectorAll('button').forEach(b => b.disabled = false);
+    }
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  // On load: check if already logged in as admin
+  window.addEventListener('DOMContentLoaded', () => {
+    if (token && user && user.role === 'admin') {
+      enterDashboard();
+    }
+  });
+
+  document.getElementById('gatePassword').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') login();
+  });
+</script>
+
+</body>
+</html>

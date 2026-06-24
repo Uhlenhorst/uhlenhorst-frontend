@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geschäftsverzeichnis – Auf der Uhlenhorst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+  :root {
+    --deep: #0A2A43;
+    --water: #13456B;
+    --water-light: #2E6690;
+    --white: #FFFFFF;
+    --mist: #E8EDF2;
+    --gold: #C9A24B;
+    --ink: #0E1B26;
+    --success: #1E6B44;
+    --success-bg: #E7F3EC;
+    --danger: #B3261E;
+    --danger-bg: #FDECEA;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    background: var(--white);
+    line-height: 1.6;
+  }
+
+  a { text-decoration: none; color: inherit; }
+  h1, h2, h3, .display { font-family: 'Fraunces', serif; font-weight: 600; }
+
+  /* Header */
+  header {
+    background: var(--deep);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 28px;
+  }
+  .logo {
+    color: var(--white);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .logo em { font-style: italic; color: var(--gold); }
+  .auth-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn {
+    padding: 9px 18px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-gold { background: var(--gold); color: var(--deep); }
+  .btn-gold:hover { background: #d9b566; }
+  .btn-ghost { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
+  .btn-ghost:hover { border-color: var(--white); }
+  .user-pill {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.85rem;
+  }
+
+  /* Hero strip */
+  .hero-strip {
+    background: linear-gradient(160deg, var(--deep) 0%, var(--water) 100%);
+    color: var(--white);
+    padding: 44px 28px 38px;
+  }
+  .hero-inner { max-width: 1100px; margin: 0 auto; }
+  .eyebrow {
+    font-size: 0.74rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .hero-strip h1 { font-size: 2rem; }
+
+  /* Main */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 28px 80px;
+  }
+
+  .toolbar {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .search-input {
+    flex: 1;
+    min-width: 220px;
+    padding: 12px 16px;
+    border: 1px solid #d8e0e6;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    font-family: 'Inter', sans-serif;
+  }
+  .search-input:focus { outline: none; border-color: var(--water); }
+
+  .az-row {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .az-letter {
+    min-width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--water);
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0 4px;
+    user-select: none;
+  }
+  .az-letter:hover { background: var(--mist); }
+  .az-letter.active { background: var(--deep); color: var(--white); }
+  .az-letter.disabled { color: #c5cdd3; cursor: default; pointer-events: none; }
+
+  .dir-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--mist);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 28px;
+    align-items: start;
+  }
+  #mapBox {
+    position: sticky;
+    top: 20px;
+    height: 560px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--mist);
+    background: var(--mist);
+  }
+  .leaflet-popup-content b { color: var(--deep); }
+  .leaflet-popup-content .pop-cat {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--water);
+  }
+
+  @media (max-width: 880px) {
+    .content-grid { grid-template-columns: 1fr; }
+    #mapBox { height: 360px; position: static; }
+  }
+
+  .dir-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--mist);
+    gap: 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .dir-item:hover { background: var(--mist); }
+  .dir-item.no-coords { cursor: default; }
+  .dir-item.no-coords:hover { background: transparent; }
+  .dir-item:last-child { border-bottom: none; }
+  .dir-letter-badge {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--deep);
+    color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .dir-info { flex: 1; min-width: 0; }
+  .biz-name { font-weight: 600; font-size: 0.98rem; color: var(--deep); }
+  .biz-cat {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--water);
+    background: rgba(19,69,107,0.08);
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-top: 4px;
+  }
+  .biz-desc { font-size: 0.86rem; color: #5c6e79; margin-top: 6px; }
+  .biz-address { font-size: 0.82rem; color: #8294a0; margin-top: 4px; }
+
+  .empty-state, .loading-state {
+    padding: 60px 30px;
+    text-align: center;
+    color: #6b7d89;
+  }
+  .empty-state h3 { color: var(--deep); margin-bottom: 6px; font-family: 'Fraunces', serif; }
+
+  .submit-banner {
+    margin-top: 30px;
+    background: var(--mist);
+    border-radius: 8px;
+    padding: 22px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .submit-banner p { font-size: 0.92rem; color: #3d4f5a; }
+  .submit-banner strong { color: var(--deep); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(10,42,67,0.55);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: var(--white);
+    border-radius: 10px;
+    max-width: 480px;
+    width: 100%;
+    padding: 32px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-box h2 { color: var(--deep); font-size: 1.3rem; margin-bottom: 6px; }
+  .modal-sub { font-size: 0.86rem; color: #6b7d89; margin-bottom: 20px; }
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--deep);
+    margin-bottom: 6px;
+  }
+  .field input, .field textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #d8e0e6;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+  }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--water); }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+  }
+  .btn-deep { background: var(--deep); color: var(--white); flex: 1; padding: 12px; }
+  .btn-deep:hover { background: var(--water); }
+  .btn-cancel { background: transparent; color: #6b7d89; border: 1px solid #d8e0e6; padding: 12px; }
+  .modal-msg {
+    font-size: 0.85rem;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .modal-msg.show { display: block; }
+  .modal-msg.error { background: var(--danger-bg); color: var(--danger); }
+  .modal-msg.success { background: var(--success-bg); color: var(--success); }
+
+  .close-x {
+    position: absolute;
+    top: 14px; right: 18px;
+    font-size: 1.3rem;
+    color: #8294a0;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  .modal-box { position: relative; }
+
+  @media (max-width: 600px) {
+    .submit-banner { flex-direction: column; text-align: center; }
+  }
+  @media (max-width: 760px) {
+    .main-nav { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <a href="auf-der-uhlenhorst-home.html" class="logo">Auf der <em>Uhlenhorst</em></a>
+    <nav class="main-nav" style="display:flex; gap:24px;">
+      <a href="auf-der-uhlenhorst-verzeichnis.html" style="color:var(--gold); font-size:0.88rem; font-weight:600;">Geschäfte</a>
+      <a href="auf-der-uhlenhorst-termine.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500;">Moin Uhlenhorst</a>
+      <a href="auf-der-uhlenhorst-forum.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500;">Forum</a>
+      <a href="auf-der-uhlenhorst-shop.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500;">Shop</a>
+    </nav>
+    <div class="auth-area" id="authArea">
+      <button class="btn btn-ghost" onclick="window.location.href='auf-der-uhlenhorst-login.html'">Anmelden</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero-strip">
+  <div class="hero-inner">
+    <div class="eyebrow">Geschäftsverzeichnis</div>
+    <h1>Alle Geschäfte der Uhlenhorst</h1>
+  </div>
+</section>
+
+<main>
+  <div class="toolbar">
+    <input type="text" class="search-input" id="searchInput" placeholder="Geschäft, Café, Praxis suchen …" oninput="applyFilters()">
+  </div>
+
+  <div class="az-row" id="azRow"></div>
+
+  <div class="content-grid">
+    <div id="listContainer">
+      <div class="loading-state">Lädt Geschäfte …</div>
+    </div>
+    <div id="mapBox"></div>
+  </div>
+
+  <div class="submit-banner">
+    <p><strong>Du hast ein Geschäft auf der Uhlenhorst?</strong> Trage es kostenlos ein – nach kurzer Prüfung ist es für alle sichtbar.</p>
+    <button class="btn btn-gold" onclick="openSubmitModal()">Jetzt eintragen</button>
+  </div>
+</main>
+
+<!-- Submit Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="close-x" onclick="closeSubmitModal()">&times;</button>
+
+    <!-- Not logged in -->
+    <div id="modalLoginRequired">
+      <h2>Anmeldung erforderlich</h2>
+      <p class="modal-sub">Um ein Geschäft einzutragen, melde dich zuerst mit deinem Konto an.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" style="flex:1" onclick="closeSubmitModal()">Abbrechen</button>
+        <button class="btn-deep" onclick="window.location.href='auf-der-uhlenhorst-login.html'">Zur Anmeldung</button>
+      </div>
+    </div>
+
+    <!-- Submit form -->
+    <form id="submitForm" style="display:none;" onsubmit="handleSubmitBusiness(event)">
+      <h2>Geschäft eintragen</h2>
+      <p class="modal-sub">Dein Eintrag wird vor Veröffentlichung kurz geprüft.</p>
+
+      <div class="modal-msg" id="modalMsg"></div>
+
+      <div class="field">
+        <label for="bizName">Name des Geschäfts *</label>
+        <input type="text" id="bizName" required placeholder="z.B. Café Anker">
+      </div>
+      <div class="field">
+        <label for="bizCategory">Kategorie *</label>
+        <input type="text" id="bizCategory" required placeholder="z.B. Café, Friseur, Restaurant">
+      </div>
+      <div class="field">
+        <label for="bizAddress">Adresse *</label>
+        <input type="text" id="bizAddress" required placeholder="Straße, Hausnummer, PLZ Hamburg">
+        <div id="geocodeStatus" style="font-size:0.78rem; color:#8294a0; margin-top:5px;"></div>
+      </div>
+      <div class="field">
+        <label for="bizDescription">Beschreibung</label>
+        <textarea id="bizDescription" placeholder="Kurze Beschreibung deines Angebots"></textarea>
+      </div>
+      <div class="field">
+        <label for="bizPhone">Telefon</label>
+        <input type="text" id="bizPhone" placeholder="040 1234567">
+      </div>
+      <div class="field">
+        <label for="bizWebsite">Website</label>
+        <input type="text" id="bizWebsite" placeholder="www.beispiel.de">
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="closeSubmitModal()">Abbrechen</button>
+        <button type="submit" class="btn-deep" id="submitBizBtn">Einreichen</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+  const API_BASE = 'https://uhlenhorst-backend.onrender.com/api';
+  let allBusinesses = [];
+  let activeLetter = 'Alle';
+  let leafletMap = null;
+  let mapMarkers = [];
+  const UHLENHORST_CENTER = [53.5680, 10.0190]; // Uhlenhorst, Hamburg
+
+  const token = localStorage.getItem('uhlenhorst_token');
+  const user = JSON.parse(localStorage.getItem('uhlenhorst_user') || 'null');
+
+  // Update header based on auth state
+  if (user) {
+    document.getElementById('authArea').innerHTML = `
+      <span class="user-pill">Hallo, ${escapeHtml(user.name.split(' ')[0])}</span>
+      <button class="btn btn-ghost" onclick="logout()">Abmelden</button>
+    `;
+  }
+
+  function logout() {
+    localStorage.removeItem('uhlenhorst_token');
+    localStorage.removeItem('uhlenhorst_user');
+    window.location.reload();
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  function initMap() {
+    leafletMap = L.map('mapBox').setView(UHLENHORST_CENTER, 14);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> Mitwirkende'
+    }).addTo(leafletMap);
+  }
+
+  function renderMapMarkers(items) {
+    if (!leafletMap) return;
+    mapMarkers.forEach(m => leafletMap.removeLayer(m));
+    mapMarkers = [];
+
+    const withCoords = items.filter(b => b.latitude && b.longitude);
+
+    withCoords.forEach(biz => {
+      const marker = L.marker([parseFloat(biz.latitude), parseFloat(biz.longitude)]).addTo(leafletMap);
+      marker.bindPopup(`<b>${escapeHtml(biz.name)}</b><br><span class="pop-cat">${escapeHtml(biz.category)}</span><br>${escapeHtml(biz.address)}`);
+      marker.uhlenhorstId = biz.id;
+      mapMarkers.push(marker);
+    });
+
+    if (withCoords.length > 0) {
+      const group = L.featureGroup(mapMarkers);
+      leafletMap.fitBounds(group.getBounds(), { padding: [30, 30], maxZoom: 16 });
+    } else {
+      leafletMap.setView(UHLENHORST_CENTER, 14);
+    }
+  }
+
+  function focusOnMap(bizId) {
+    const marker = mapMarkers.find(m => m.uhlenhorstId === bizId);
+    if (marker) {
+      leafletMap.setView(marker.getLatLng(), 16);
+      marker.openPopup();
+    }
+  }
+
+  async function loadBusinesses() {
+    const container = document.getElementById('listContainer');
+    try {
+      const res = await fetch(`${API_BASE}/businesses`);
+      allBusinesses = await res.json();
+      buildAzRow();
+      renderList(allBusinesses);
+      renderMapMarkers(allBusinesses);
+    } catch (err) {
+      container.innerHTML = '<div class="empty-state"><h3>Verbindung fehlgeschlagen</h3><p>Bitte später erneut versuchen.</p></div>';
+    }
+  }
+
+  function buildAzRow() {
+    const lettersPresent = new Set(allBusinesses.map(b => b.name.charAt(0).toUpperCase()));
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const row = document.getElementById('azRow');
+
+    let html = `<div class="az-letter active" data-letter="Alle" onclick="selectLetter('Alle')">Alle</div>`;
+    alphabet.forEach(letter => {
+      const has = lettersPresent.has(letter);
+      html += `<div class="az-letter ${has ? '' : 'disabled'}" data-letter="${letter}" onclick="${has ? `selectLetter('${letter}')` : ''}">${letter}</div>`;
+    });
+    row.innerHTML = html;
+  }
+
+  function selectLetter(letter) {
+    activeLetter = letter;
+    document.querySelectorAll('.az-letter').forEach(el => {
+      el.classList.toggle('active', el.dataset.letter === letter);
+    });
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    let filtered = allBusinesses;
+
+    if (activeLetter !== 'Alle') {
+      filtered = filtered.filter(b => b.name.charAt(0).toUpperCase() === activeLetter);
+    }
+    if (query) {
+      filtered = filtered.filter(b =>
+        b.name.toLowerCase().includes(query) ||
+        b.category.toLowerCase().includes(query) ||
+        (b.description || '').toLowerCase().includes(query)
+      );
+    }
+    renderList(filtered);
+    renderMapMarkers(filtered);
+  }
+
+  function renderList(items) {
+    const container = document.getElementById('listContainer');
+
+    if (items.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <h3>Keine Geschäfte gefunden</h3>
+          <p>Versuch eine andere Suche oder trage als Erste/r ein Geschäft ein.</p>
+        </div>`;
+      return;
+    }
+
+    const sorted = [...items].sort((a, b) => a.name.localeCompare(b.name, 'de'));
+
+    container.innerHTML = `<div class="dir-list">` + sorted.map(biz => {
+      const hasCoords = biz.latitude && biz.longitude;
+      return `
+      <div class="dir-item ${hasCoords ? '' : 'no-coords'}" ${hasCoords ? `onclick="focusOnMap('${biz.id}')"` : ''}>
+        <div class="dir-letter-badge">${escapeHtml(biz.name.charAt(0).toUpperCase())}</div>
+        <div class="dir-info">
+          <div class="biz-name">${escapeHtml(biz.name)}</div>
+          <span class="biz-cat">${escapeHtml(biz.category)}</span>
+          ${biz.description ? `<div class="biz-desc">${escapeHtml(biz.description)}</div>` : ''}
+          <div class="biz-address">${escapeHtml(biz.address)}${hasCoords ? '' : ' · Position nicht auf der Karte verfügbar'}</div>
+        </div>
+      </div>
+    `;
+    }).join('') + `</div>`;
+  }
+
+  // ---- Submit modal ----
+  function openSubmitModal() {
+    document.getElementById('modalOverlay').classList.add('show');
+    const currentToken = localStorage.getItem('uhlenhorst_token');
+    if (currentToken) {
+      document.getElementById('modalLoginRequired').style.display = 'none';
+      document.getElementById('submitForm').style.display = 'flex';
+      document.getElementById('submitForm').style.flexDirection = 'column';
+    } else {
+      document.getElementById('modalLoginRequired').style.display = 'block';
+      document.getElementById('submitForm').style.display = 'none';
+    }
+  }
+
+  function closeSubmitModal() {
+    document.getElementById('modalOverlay').classList.remove('show');
+    document.getElementById('modalMsg').className = 'modal-msg';
+  }
+
+  async function geocodeAddress(address) {
+    const statusEl = document.getElementById('geocodeStatus');
+    statusEl.textContent = 'Position wird ermittelt …';
+    try {
+      const query = encodeURIComponent(`${address}, Hamburg, Deutschland`);
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${query}`, {
+        headers: { 'Accept-Language': 'de' }
+      });
+      const results = await res.json();
+      if (results.length > 0) {
+        statusEl.textContent = 'Position gefunden – wird auf der Karte angezeigt.';
+        return { latitude: parseFloat(results[0].lat), longitude: parseFloat(results[0].lon) };
+      }
+      statusEl.textContent = 'Position nicht eindeutig gefunden – Geschäft wird ohne Kartenpunkt eingetragen.';
+      return { latitude: null, longitude: null };
+    } catch (err) {
+      statusEl.textContent = '';
+      return { latitude: null, longitude: null };
+    }
+  }
+
+  async function handleSubmitBusiness(event) {
+    event.preventDefault();
+    const msgBox = document.getElementById('modalMsg');
+    msgBox.className = 'modal-msg';
+    const btn = document.getElementById('submitBizBtn');
+    btn.disabled = true;
+    btn.textContent = 'Wird eingereicht …';
+
+    const currentToken = localStorage.getItem('uhlenhorst_token');
+    const address = document.getElementById('bizAddress').value.trim();
+    const coords = await geocodeAddress(address);
+
+    const payload = {
+      name: document.getElementById('bizName').value.trim(),
+      category: document.getElementById('bizCategory').value.trim(),
+      address: address,
+      description: document.getElementById('bizDescription').value.trim(),
+      phone: document.getElementById('bizPhone').value.trim(),
+      website: document.getElementById('bizWebsite').value.trim(),
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/businesses`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        msgBox.textContent = data.error || 'Einreichen fehlgeschlagen.';
+        msgBox.className = 'modal-msg show error';
+        btn.disabled = false;
+        btn.textContent = 'Einreichen';
+        return;
+      }
+
+      msgBox.textContent = 'Vielen Dank! Dein Geschäft wird in Kürze geprüft.';
+      msgBox.className = 'modal-msg show success';
+      document.getElementById('submitForm').reset();
+      setTimeout(() => closeSubmitModal(), 1800);
+      btn.disabled = false;
+      btn.textContent = 'Einreichen';
+    } catch (err) {
+      msgBox.textContent = 'Verbindung zum Server fehlgeschlagen.';
+      msgBox.className = 'modal-msg show error';
+      btn.disabled = false;
+      btn.textContent = 'Einreichen';
+    }
+  }
+
+  initMap();
+  loadBusinesses();
+</script>
+
+</body>
+</html>

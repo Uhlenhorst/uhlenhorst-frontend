@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moin Uhlenhorst – Termine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep: #0A2A43;
+    --water: #13456B;
+    --water-light: #2E6690;
+    --white: #FFFFFF;
+    --mist: #E8EDF2;
+    --gold: #C9A24B;
+    --ink: #0E1B26;
+    --success: #1E6B44;
+    --success-bg: #E7F3EC;
+    --danger: #B3261E;
+    --danger-bg: #FDECEA;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; color: var(--ink); background: var(--white); line-height: 1.6; }
+  a { text-decoration: none; color: inherit; }
+  h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+
+  header {
+    background: var(--deep);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-wrap {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 28px;
+  }
+  .logo { color: var(--white); font-size: 1.2rem; display: flex; align-items: baseline; gap: 8px; }
+  .logo em { font-style: italic; color: var(--gold); }
+  .auth-area { display: flex; align-items: center; gap: 12px; }
+  .btn { padding: 9px 18px; border-radius: 5px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-gold { background: var(--gold); color: var(--deep); }
+  .btn-gold:hover { background: #d9b566; }
+  .btn-ghost { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
+  .btn-ghost:hover { border-color: var(--white); }
+  .user-pill { color: rgba(255,255,255,0.85); font-size: 0.85rem; }
+
+  .hero {
+    background: linear-gradient(160deg, var(--deep) 0%, var(--water) 100%);
+    color: var(--white);
+    padding: 50px 28px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+  .eyebrow { font-size: 0.76rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+  .hero h1 { font-size: 2.3rem; margin-bottom: 14px; }
+  .hero h1 em { font-style: italic; color: var(--gold); }
+  .hero p { color: rgba(255,255,255,0.8); max-width: 480px; font-size: 0.96rem; }
+
+  main { max-width: 1100px; margin: -46px auto 0; padding: 0 28px 80px; position: relative; z-index: 2; }
+
+  .admin-bar {
+    background: var(--white);
+    border: 1px solid var(--mist);
+    border-radius: 8px;
+    padding: 16px 22px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 12px 30px rgba(10,42,67,0.08);
+    display: none;
+  }
+  .admin-bar.show { display: flex; }
+  .admin-bar span { font-size: 0.88rem; color: #5c6e79; }
+  .admin-bar strong { color: var(--deep); }
+
+  .events-list { display: flex; flex-direction: column; gap: 14px; }
+
+  .event-card {
+    background: var(--white);
+    border: 1px solid var(--mist);
+    border-radius: 10px;
+    padding: 22px 24px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    box-shadow: 0 16px 40px rgba(10,42,67,0.06);
+  }
+  .event-date-badge {
+    width: 64px; height: 64px;
+    background: var(--deep);
+    color: var(--white);
+    border-radius: 8px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .event-date-badge .d { font-family: 'Fraunces', serif; font-size: 1.5rem; line-height: 1; }
+  .event-date-badge .m { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gold); margin-top: 2px; }
+
+  .event-body { flex: 1; min-width: 0; }
+  .event-title { font-family: 'Fraunces', serif; font-size: 1.15rem; color: var(--deep); margin-bottom: 4px; }
+  .event-meta { font-size: 0.84rem; color: #6b7d89; margin-bottom: 8px; }
+  .event-meta span { margin-right: 14px; }
+  .event-desc { font-size: 0.9rem; color: #44545e; }
+  .event-by { font-size: 0.78rem; color: #aab8c2; margin-top: 8px; }
+
+  .event-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .btn-icon {
+    border: 1px solid #d8e0e6;
+    background: var(--white);
+    color: #6b7d89;
+    border-radius: 5px;
+    padding: 7px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-icon:hover { border-color: var(--water); color: var(--water); }
+  .btn-icon.danger:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-bg); }
+
+  .empty-state, .loading-state {
+    padding: 60px 30px;
+    text-align: center;
+    color: #6b7d89;
+    background: var(--mist);
+    border-radius: 10px;
+  }
+  .empty-state h3 { color: var(--deep); margin-bottom: 6px; }
+
+  .fab-add {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    background: var(--gold);
+    color: var(--deep);
+    border: none;
+    border-radius: 30px;
+    padding: 14px 24px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 14px 34px rgba(0,0,0,0.25);
+    display: none;
+  }
+  .fab-add.show { display: block; }
+  .fab-add:hover { background: #d9b566; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(10,42,67,0.55); z-index: 200;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: var(--white); border-radius: 10px; max-width: 480px; width: 100%;
+    padding: 32px; max-height: 90vh; overflow-y: auto; position: relative;
+  }
+  .modal-box h2 { color: var(--deep); font-size: 1.3rem; margin-bottom: 6px; }
+  .modal-sub { font-size: 0.86rem; color: #6b7d89; margin-bottom: 20px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--deep); margin-bottom: 6px; }
+  .field input, .field textarea {
+    width: 100%; padding: 11px 13px; border: 1px solid #d8e0e6; border-radius: 6px;
+    font-family: 'Inter', sans-serif; font-size: 0.9rem;
+  }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--water); }
+  .field-row { display: flex; gap: 12px; }
+  .field-row .field { flex: 1; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+  .btn-deep { background: var(--deep); color: var(--white); flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
+  .btn-deep:hover { background: var(--water); }
+  .btn-cancel { background: transparent; color: #6b7d89; border: 1px solid #d8e0e6; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+  .modal-msg { font-size: 0.85rem; padding: 10px 12px; border-radius: 6px; margin-bottom: 14px; display: none; }
+  .modal-msg.show { display: block; }
+  .modal-msg.error { background: var(--danger-bg); color: var(--danger); }
+  .modal-msg.success { background: var(--success-bg); color: var(--success); }
+  .close-x { position: absolute; top: 14px; right: 18px; font-size: 1.3rem; color: #8294a0; cursor: pointer; background: none; border: none; }
+
+  @media (max-width: 600px) {
+    .event-card { flex-direction: column; }
+    .event-actions { width: 100%; }
+    .field-row { flex-direction: column; }
+  }
+  @media (max-width: 760px) {
+    .main-nav { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <a href="auf-der-uhlenhorst-home.html" class="logo">Auf der <em>Uhlenhorst</em></a>
+    <nav class="main-nav" style="display:flex; gap:24px;">
+      <a href="auf-der-uhlenhorst-verzeichnis.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500;">Geschäfte</a>
+      <a href="auf-der-uhlenhorst-termine.html" style="color:var(--gold); font-size:0.88rem; font-weight:600;">Moin Uhlenhorst</a>
+      <a href="auf-der-uhlenhorst-forum.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500;">Forum</a>
+      <a href="auf-der-uhlenhorst-shop.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500;">Shop</a>
+    </nav>
+    <div class="auth-area" id="authArea">
+      <button class="btn btn-ghost" onclick="window.location.href='auf-der-uhlenhorst-login.html'">Anmelden</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Interessengemeinschaft</div>
+    <h1>Moin <em>Uhlenhorst</em></h1>
+    <p>Termine, Feste und Veranstaltungen der Gemeinschaft – immer aktuell auf einen Blick.</p>
+  </div>
+</section>
+
+<main>
+  <div class="admin-bar" id="adminBar">
+    <span>Angemeldet als <strong id="adminBarName"></strong> · Du kannst Termine anlegen und verwalten.</span>
+    <button class="btn btn-gold" onclick="openEventModal()">+ Neuer Termin</button>
+  </div>
+
+  <div id="eventsContainer">
+    <div class="loading-state">Termine werden geladen …</div>
+  </div>
+</main>
+
+<button class="fab-add" id="fabAdd" onclick="openEventModal()">+ Termin anlegen</button>
+
+<!-- Event Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="close-x" onclick="closeEventModal()">&times;</button>
+    <h2 id="modalTitle">Neuer Termin</h2>
+    <p class="modal-sub">Lege eine Veranstaltung für die Uhlenhorst-Gemeinschaft an.</p>
+
+    <div class="modal-msg" id="modalMsg"></div>
+
+    <form id="eventForm" onsubmit="handleSubmitEvent(event)">
+      <input type="hidden" id="eventId">
+      <div class="field">
+        <label for="evTitle">Titel *</label>
+        <input type="text" id="evTitle" required placeholder="z.B. Sommerfest am Kanal">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="evStart">Beginn *</label>
+          <input type="datetime-local" id="evStart" required>
+        </div>
+        <div class="field">
+          <label for="evEnd">Ende</label>
+          <input type="datetime-local" id="evEnd">
+        </div>
+      </div>
+      <div class="field">
+        <label for="evLocation">Ort</label>
+        <input type="text" id="evLocation" placeholder="z.B. Streekbrücke">
+      </div>
+      <div class="field">
+        <label for="evDescription">Beschreibung</label>
+        <textarea id="evDescription" placeholder="Was erwartet die Besucher?"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="closeEventModal()">Abbrechen</button>
+        <button type="submit" class="btn-deep" id="submitEventBtn">Speichern</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const API_BASE = 'https://uhlenhorst-backend.onrender.com/api';
+  const MONTHS_DE = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+
+  const token = localStorage.getItem('uhlenhorst_token');
+  const user = JSON.parse(localStorage.getItem('uhlenhorst_user') || 'null');
+  const isAdmin = user && user.role === 'admin';
+
+  if (user) {
+    document.getElementById('authArea').innerHTML = `
+      <span class="user-pill">Hallo, ${escapeHtml(user.name.split(' ')[0])}</span>
+      <button class="btn btn-ghost" onclick="logout()">Abmelden</button>
+    `;
+  }
+  if (isAdmin) {
+    document.getElementById('adminBar').classList.add('show');
+    document.getElementById('adminBarName').textContent = user.name;
+    document.getElementById('fabAdd').classList.add('show');
+  }
+
+  function logout() {
+    localStorage.removeItem('uhlenhorst_token');
+    localStorage.removeItem('uhlenhorst_user');
+    window.location.reload();
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  function formatDateRange(startsAt, endsAt) {
+    const start = new Date(startsAt);
+    const startStr = start.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }) +
+                      ' · ' + start.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+    if (!endsAt) return startStr;
+    const end = new Date(endsAt);
+    const sameDay = start.toDateString() === end.toDateString();
+    if (sameDay) {
+      return startStr + ' – ' + end.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+    }
+    return startStr + ' bis ' + end.toLocaleDateString('de-DE', { day: 'numeric', month: 'long' });
+  }
+
+  async function loadEvents() {
+    const container = document.getElementById('eventsContainer');
+    try {
+      const res = await fetch(`${API_BASE}/events`);
+      const events = await res.json();
+
+      if (events.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>Keine Termine geplant</h3>
+            <p>Aktuell stehen keine Veranstaltungen an. Schau später wieder vorbei.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = `<div class="events-list">` + events.map(ev => {
+        const d = new Date(ev.starts_at);
+        return `
+        <div class="event-card">
+          <div class="event-date-badge">
+            <div class="d">${d.getDate()}</div>
+            <div class="m">${MONTHS_DE[d.getMonth()]}</div>
+          </div>
+          <div class="event-body">
+            <div class="event-title">${escapeHtml(ev.title)}</div>
+            <div class="event-meta">
+              <span>${formatDateRange(ev.starts_at, ev.ends_at)}</span>
+              ${ev.location ? `<span>· ${escapeHtml(ev.location)}</span>` : ''}
+            </div>
+            ${ev.description ? `<div class="event-desc">${escapeHtml(ev.description)}</div>` : ''}
+            ${ev.created_by_name ? `<div class="event-by">Angelegt von ${escapeHtml(ev.created_by_name)}</div>` : ''}
+          </div>
+          ${isAdmin ? `
+            <div class="event-actions">
+              <button class="btn-icon" onclick='editEvent(${JSON.stringify(ev).replace(/'/g, "&apos;")})'>Bearbeiten</button>
+              <button class="btn-icon danger" onclick="deleteEvent('${ev.id}')">Löschen</button>
+            </div>
+          ` : ''}
+        </div>`;
+      }).join('') + `</div>`;
+    } catch (err) {
+      container.innerHTML = '<div class="empty-state"><h3>Verbindung fehlgeschlagen</h3><p>Bitte später erneut versuchen.</p></div>';
+    }
+  }
+
+  function openEventModal() {
+    document.getElementById('eventForm').reset();
+    document.getElementById('eventId').value = '';
+    document.getElementById('modalTitle').textContent = 'Neuer Termin';
+    document.getElementById('modalMsg').className = 'modal-msg';
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+
+  function closeEventModal() {
+    document.getElementById('modalOverlay').classList.remove('show');
+  }
+
+  function toLocalInputValue(isoString) {
+    const d = new Date(isoString);
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function editEvent(ev) {
+    document.getElementById('eventId').value = ev.id;
+    document.getElementById('evTitle').value = ev.title;
+    document.getElementById('evStart').value = toLocalInputValue(ev.starts_at);
+    document.getElementById('evEnd').value = ev.ends_at ? toLocalInputValue(ev.ends_at) : '';
+    document.getElementById('evLocation').value = ev.location || '';
+    document.getElementById('evDescription').value = ev.description || '';
+    document.getElementById('modalTitle').textContent = 'Termin bearbeiten';
+    document.getElementById('modalMsg').className = 'modal-msg';
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+
+  async function handleSubmitEvent(event) {
+    event.preventDefault();
+    const msgBox = document.getElementById('modalMsg');
+    msgBox.className = 'modal-msg';
+    const btn = document.getElementById('submitEventBtn');
+    btn.disabled = true;
+    btn.textContent = 'Speichert …';
+
+    const id = document.getElementById('eventId').value;
+    const payload = {
+      title: document.getElementById('evTitle').value.trim(),
+      starts_at: document.getElementById('evStart').value,
+      ends_at: document.getElementById('evEnd').value || null,
+      location: document.getElementById('evLocation').value.trim(),
+      description: document.getElementById('evDescription').value.trim(),
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/events${id ? '/' + id : ''}`, {
+        method: id ? 'PATCH' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        msgBox.textContent = data.error || 'Speichern fehlgeschlagen.';
+        msgBox.className = 'modal-msg show error';
+        btn.disabled = false;
+        btn.textContent = 'Speichern';
+        return;
+      }
+
+      msgBox.textContent = 'Termin gespeichert.';
+      msgBox.className = 'modal-msg show success';
+      setTimeout(() => { closeEventModal(); loadEvents(); }, 900);
+      btn.disabled = false;
+      btn.textContent = 'Speichern';
+    } catch (err) {
+      msgBox.textContent = 'Verbindung zum Server fehlgeschlagen.';
+      msgBox.className = 'modal-msg show error';
+      btn.disabled = false;
+      btn.textContent = 'Speichern';
+    }
+  }
+
+  async function deleteEvent(id) {
+    if (!confirm('Diesen Termin wirklich löschen?')) return;
+    try {
+      const res = await fetch(`${API_BASE}/events/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) loadEvents();
+    } catch (err) {
+      alert('Löschen fehlgeschlagen. Bitte erneut versuchen.');
+    }
+  }
+
+  loadEvents();
+</script>
+
+</body>
+</html>

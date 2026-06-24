@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop – Auf der Uhlenhorst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+  :root {
+    --deep: #0A2A43;
+    --water: #13456B;
+    --water-light: #2E6690;
+    --white: #FFFFFF;
+    --mist: #E8EDF2;
+    --gold: #C9A24B;
+    --ink: #0E1B26;
+    --success: #1E6B44;
+    --success-bg: #E7F3EC;
+    --danger: #B3261E;
+    --danger-bg: #FDECEA;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; color: var(--ink); background: var(--white); line-height: 1.6; }
+  a { text-decoration: none; color: inherit; }
+  h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+
+  header { background: var(--deep); border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .nav-wrap { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; }
+  .logo { color: var(--white); font-size: 1.2rem; display: flex; align-items: baseline; gap: 8px; }
+  .logo em { font-style: italic; color: var(--gold); }
+  .auth-area { display: flex; align-items: center; gap: 14px; }
+  .btn { padding: 9px 18px; border-radius: 5px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-gold { background: var(--gold); color: var(--deep); }
+  .btn-gold:hover { background: #d9b566; }
+  .btn-ghost { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
+  .btn-ghost:hover { border-color: var(--white); }
+  .user-pill { color: rgba(255,255,255,0.85); font-size: 0.85rem; }
+  .cart-btn {
+    position: relative; background: transparent; border: 1px solid rgba(255,255,255,0.3);
+    color: var(--white); border-radius: 5px; padding: 9px 16px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  }
+  .cart-btn:hover { border-color: var(--white); }
+  .cart-badge {
+    position: absolute; top: -8px; right: -8px; background: var(--gold); color: var(--deep);
+    font-size: 0.7rem; font-weight: 700; border-radius: 50%; width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center; display: none;
+  }
+  .cart-badge.show { display: flex; }
+
+  .hero { background: linear-gradient(160deg, var(--deep) 0%, var(--water) 100%); color: var(--white); padding: 44px 28px 38px; }
+  .hero-inner { max-width: 1100px; margin: 0 auto; }
+  .eyebrow { font-size: 0.76rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+  .hero h1 { font-size: 2.1rem; }
+  .hero p { color: rgba(255,255,255,0.8); max-width: 480px; font-size: 0.96rem; margin-top: 10px; }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 36px 28px 80px; }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 22px;
+  }
+  .product-card { background: var(--white); border: 1px solid var(--mist); border-radius: 10px; overflow: hidden; transition: box-shadow 0.2s; }
+  .product-card:hover { box-shadow: 0 14px 34px rgba(10,42,67,0.1); }
+  .product-img {
+    height: 200px; background: var(--mist); display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .product-img img { width: 100%; height: 100%; object-fit: cover; }
+  .product-img .placeholder { font-family: 'Fraunces', serif; color: #aab8c2; font-size: 0.85rem; }
+  .product-info { padding: 16px 18px; }
+  .product-name { font-weight: 600; font-size: 0.95rem; color: var(--deep); margin-bottom: 4px; }
+  .product-desc { font-size: 0.82rem; color: #6b7d89; margin-bottom: 10px; min-height: 20px; }
+  .product-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .product-price { font-family: 'Fraunces', serif; font-weight: 600; color: var(--water); font-size: 1.05rem; }
+  .add-btn {
+    background: var(--deep); color: var(--white); border: none; border-radius: 5px;
+    padding: 8px 14px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+  }
+  .add-btn:hover { background: var(--water); }
+  .add-btn:disabled { background: #c5cdd3; cursor: default; }
+
+  .empty-state, .loading-state { padding: 60px 30px; text-align: center; color: #6b7d89; background: var(--mist); border-radius: 8px; }
+  .empty-state h3 { color: var(--deep); margin-bottom: 6px; }
+
+  /* Cart drawer */
+  .drawer-overlay {
+    display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(10,42,67,0.5); z-index: 200;
+  }
+  .drawer-overlay.show { display: block; }
+  .cart-drawer {
+    position: fixed; top: 0; right: -420px; width: 400px; max-width: 92vw; height: 100%;
+    background: var(--white); z-index: 201; transition: right 0.3s ease; display: flex; flex-direction: column;
+  }
+  .cart-drawer.show { right: 0; }
+  .drawer-head { padding: 22px 24px; border-bottom: 1px solid var(--mist); display: flex; justify-content: space-between; align-items: center; }
+  .drawer-head h2 { font-size: 1.2rem; color: var(--deep); }
+  .drawer-close { background: none; border: none; font-size: 1.4rem; color: #8294a0; cursor: pointer; }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 18px 24px; }
+  .cart-item { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--mist); align-items: center; }
+  .cart-item-img { width: 56px; height: 56px; border-radius: 6px; background: var(--mist); flex-shrink: 0; overflow: hidden; }
+  .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-name { font-size: 0.88rem; font-weight: 600; color: var(--deep); }
+  .cart-item-price { font-size: 0.82rem; color: #6b7d89; margin-top: 2px; }
+  .qty-control { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+  .qty-btn { width: 22px; height: 22px; border: 1px solid #d8e0e6; background: var(--white); border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+  .qty-val { font-size: 0.85rem; font-weight: 600; min-width: 16px; text-align: center; }
+  .remove-item { font-size: 0.76rem; color: var(--danger); background: none; border: none; cursor: pointer; font-weight: 600; }
+
+  .drawer-footer { padding: 20px 24px; border-top: 1px solid var(--mist); }
+  .cart-total { display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; color: var(--deep); margin-bottom: 14px; }
+  .btn-checkout { width: 100%; padding: 13px; background: var(--gold); color: var(--deep); border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
+  .btn-checkout:hover { background: #d9b566; }
+  .btn-checkout:disabled { background: #d8e0e6; color: #8294a0; cursor: default; }
+  .empty-cart-msg { text-align: center; color: #8294a0; padding: 40px 0; font-size: 0.9rem; }
+
+  /* Checkout modal */
+  .modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(10,42,67,0.6); z-index: 300; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.show { display: flex; }
+  .checkout-box { background: var(--white); border-radius: 10px; max-width: 460px; width: 100%; padding: 32px; max-height: 90vh; overflow-y: auto; position: relative; }
+  .checkout-box h2 { color: var(--deep); font-size: 1.25rem; margin-bottom: 18px; }
+  .close-x { position: absolute; top: 14px; right: 18px; font-size: 1.3rem; color: #8294a0; cursor: pointer; background: none; border: none; }
+  #payment-element { margin-bottom: 18px; }
+  .pay-btn { width: 100%; padding: 13px; background: var(--deep); color: var(--white); border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
+  .pay-btn:hover { background: var(--water); }
+  .pay-btn:disabled { background: #c5cdd3; cursor: default; }
+  .checkout-msg { font-size: 0.85rem; padding: 10px 12px; border-radius: 6px; margin-top: 14px; display: none; }
+  .checkout-msg.show { display: block; }
+  .checkout-msg.error { background: var(--danger-bg); color: var(--danger); }
+  .checkout-msg.success { background: var(--success-bg); color: var(--success); }
+  .checkout-summary { background: var(--mist); border-radius: 6px; padding: 14px 16px; margin-bottom: 18px; font-size: 0.88rem; color: #44545e; }
+  .checkout-summary .total-row { display: flex; justify-content: space-between; font-weight: 700; color: var(--deep); margin-top: 8px; padding-top: 8px; border-top: 1px solid #d8e0e6; }
+
+  .login-prompt { background: var(--mist); border-radius: 8px; padding: 40px; text-align: center; font-size: 0.92rem; color: #5c6e79; }
+  .login-prompt a { color: var(--water); font-weight: 700; }
+
+  @media (max-width: 480px) {
+    .cart-drawer { width: 100%; right: -100%; }
+  }
+  @media (max-width: 700px) {
+    .main-nav { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <a href="auf-der-uhlenhorst-home.html" class="logo">Auf der <em>Uhlenhorst</em></a>
+    <nav class="main-nav" style="display:flex; gap:24px;">
+      <a href="auf-der-uhlenhorst-verzeichnis.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500;">Geschäfte</a>
+      <a href="auf-der-uhlenhorst-termine.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500;">Moin Uhlenhorst</a>
+      <a href="auf-der-uhlenhorst-forum.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500;">Forum</a>
+      <a href="auf-der-uhlenhorst-shop.html" style="color:var(--gold); font-size:0.88rem; font-weight:600;">Shop</a>
+    </nav>
+    <div class="auth-area" id="authArea">
+      <button class="btn btn-ghost" onclick="window.location.href='auf-der-uhlenhorst-login.html'">Anmelden</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Mitbringen</div>
+    <h1>Uhlenhorst-Shop</h1>
+    <p>Merchandise mit Herz – gedruckt und versendet von Printful, direkt an deine Tür.</p>
+  </div>
+</section>
+
+<main>
+  <div id="productsContainer">
+    <div class="loading-state">Produkte werden geladen …</div>
+  </div>
+</main>
+
+<!-- Cart drawer -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h2>Warenkorb</h2>
+    <button class="drawer-close" onclick="closeCart()">&times;</button>
+  </div>
+  <div class="drawer-body" id="cartBody">
+    <div class="empty-cart-msg">Dein Warenkorb ist leer.</div>
+  </div>
+  <div class="drawer-footer">
+    <div class="cart-total">
+      <span>Gesamt</span>
+      <span id="cartTotal">0,00 €</span>
+    </div>
+    <button class="btn-checkout" id="checkoutBtn" disabled onclick="openCheckout()">Zur Kasse</button>
+  </div>
+</div>
+
+<!-- Checkout modal -->
+<div class="modal-overlay" id="checkoutOverlay">
+  <div class="checkout-box">
+    <button class="close-x" onclick="closeCheckout()">&times;</button>
+    <h2>Bezahlen</h2>
+
+    <div class="checkout-summary" id="checkoutSummary"></div>
+
+    <div id="checkoutLoginPrompt" class="login-prompt" style="display:none;">
+      <a onclick="window.location.href='auf-der-uhlenhorst-login.html'">Melde dich an</a>, um deine Bestellung abzuschließen.
+    </div>
+
+    <form id="paymentForm" style="display:none;">
+      <div id="payment-element"></div>
+      <button type="submit" class="pay-btn" id="payBtn">Jetzt bezahlen</button>
+      <div class="checkout-msg" id="checkoutMsg"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const API_BASE = 'https://uhlenhorst-backend.onrender.com/api';
+  let products = [];
+  let cart = JSON.parse(sessionStorage.getItem('uhlenhorst_cart') || '[]');
+  let stripe = null;
+  let elements = null;
+
+  const token = localStorage.getItem('uhlenhorst_token');
+  const user = JSON.parse(localStorage.getItem('uhlenhorst_user') || 'null');
+
+  if (user) {
+    document.getElementById('authArea').innerHTML = `
+      <span class="user-pill">Hallo, ${escapeHtml(user.name.split(' ')[0])}</span>
+      <button class="cart-btn" onclick="openCart()">Warenkorb <span class="cart-badge" id="cartBadge">0</span></button>
+      <button class="btn btn-ghost" onclick="logout()">Abmelden</button>
+    `;
+  } else {
+    document.getElementById('authArea').innerHTML = `
+      <button class="cart-btn" onclick="openCart()">Warenkorb <span class="cart-badge" id="cartBadge">0</span></button>
+      <button class="btn btn-ghost" onclick="window.location.href='auf-der-uhlenhorst-login.html'">Anmelden</button>
+    `;
+  }
+
+  function logout() {
+    localStorage.removeItem('uhlenhorst_token');
+    localStorage.removeItem('uhlenhorst_user');
+    window.location.reload();
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  function formatPrice(cents) {
+    return (cents / 100).toFixed(2).replace('.', ',') + ' €';
+  }
+
+  function saveCart() {
+    sessionStorage.setItem('uhlenhorst_cart', JSON.stringify(cart));
+    updateCartBadge();
+  }
+
+  function updateCartBadge() {
+    const badge = document.getElementById('cartBadge');
+    if (!badge) return;
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    badge.textContent = count;
+    badge.classList.toggle('show', count > 0);
+  }
+
+  async function loadProducts() {
+    const container = document.getElementById('productsContainer');
+    try {
+      const res = await fetch(`${API_BASE}/shop/products`);
+      products = await res.json();
+
+      if (products.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>Noch keine Produkte</h3>
+            <p>Schau bald wieder vorbei – der Shop wird gerade aufgebaut.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = `<div class="product-grid">` + products.map(p => `
+        <div class="product-card">
+          <div class="product-img">
+            ${p.image_url ? `<img src="${p.image_url}" alt="${escapeHtml(p.name)}">` : `<span class="placeholder">Kein Bild</span>`}
+          </div>
+          <div class="product-info">
+            <div class="product-name">${escapeHtml(p.name)}</div>
+            <div class="product-desc">${escapeHtml(p.description || '')}</div>
+            <div class="product-bottom">
+              <span class="product-price">${formatPrice(p.price_cents)}</span>
+              <button class="add-btn" onclick="addToCart('${p.id}')">In den Korb</button>
+            </div>
+          </div>
+        </div>
+      `).join('') + `</div>`;
+    } catch (err) {
+      container.innerHTML = '<div class="empty-state"><h3>Verbindung fehlgeschlagen</h3><p>Bitte später erneut versuchen.</p></div>';
+    }
+  }
+
+  function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    const existing = cart.find(item => item.product_id === productId);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({ product_id: productId, name: product.name, price_cents: product.price_cents, image_url: product.image_url, quantity: 1 });
+    }
+    saveCart();
+    openCart();
+  }
+
+  function changeQty(productId, delta) {
+    const item = cart.find(i => i.product_id === productId);
+    if (!item) return;
+    item.quantity += delta;
+    if (item.quantity <= 0) {
+      cart = cart.filter(i => i.product_id !== productId);
+    }
+    saveCart();
+    renderCart();
+  }
+
+  function removeFromCart(productId) {
+    cart = cart.filter(i => i.product_id !== productId);
+    saveCart();
+    renderCart();
+  }
+
+  function renderCart() {
+    const body = document.getElementById('cartBody');
+    const totalEl = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+
+    if (cart.length === 0) {
+      body.innerHTML = '<div class="empty-cart-msg">Dein Warenkorb ist leer.</div>';
+      totalEl.textContent = formatPrice(0);
+      checkoutBtn.disabled = true;
+      return;
+    }
+
+    let total = 0;
+    body.innerHTML = cart.map(item => {
+      total += item.price_cents * item.quantity;
+      return `
+        <div class="cart-item">
+          <div class="cart-item-img">
+            ${item.image_url ? `<img src="${item.image_url}" alt="">` : ''}
+          </div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${escapeHtml(item.name)}</div>
+            <div class="cart-item-price">${formatPrice(item.price_cents)}</div>
+            <div class="qty-control">
+              <button class="qty-btn" onclick="changeQty('${item.product_id}', -1)">−</button>
+              <span class="qty-val">${item.quantity}</span>
+              <button class="qty-btn" onclick="changeQty('${item.product_id}', 1)">+</button>
+              <button class="remove-item" onclick="removeFromCart('${item.product_id}')">Entfernen</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    totalEl.textContent = formatPrice(total);
+    checkoutBtn.disabled = false;
+  }
+
+  function openCart() {
+    renderCart();
+    document.getElementById('cartDrawer').classList.add('show');
+    document.getElementById('drawerOverlay').classList.add('show');
+  }
+  function closeCart() {
+    document.getElementById('cartDrawer').classList.remove('show');
+    document.getElementById('drawerOverlay').classList.remove('show');
+  }
+
+  async function openCheckout() {
+    const currentToken = localStorage.getItem('uhlenhorst_token');
+    const summaryBox = document.getElementById('checkoutSummary');
+    const loginPrompt = document.getElementById('checkoutLoginPrompt');
+    const form = document.getElementById('paymentForm');
+
+    let total = 0;
+    const summaryLines = cart.map(item => {
+      const lineTotal = item.price_cents * item.quantity;
+      total += lineTotal;
+      return `<div>${item.quantity}× ${escapeHtml(item.name)} — ${formatPrice(lineTotal)}</div>`;
+    }).join('');
+    summaryBox.innerHTML = summaryLines + `<div class="total-row"><span>Gesamt</span><span>${formatPrice(total)}</span></div>`;
+
+    document.getElementById('checkoutOverlay').classList.add('show');
+
+    if (!currentToken) {
+      loginPrompt.style.display = 'block';
+      form.style.display = 'none';
+      return;
+    }
+    loginPrompt.style.display = 'none';
+    form.style.display = 'block';
+
+    document.getElementById('payBtn').disabled = true;
+    document.getElementById('payBtn').textContent = 'Lädt …';
+
+    try {
+      const res = await fetch(`${API_BASE}/shop/checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
+        body: JSON.stringify({ items: cart.map(i => ({ product_id: i.product_id, quantity: i.quantity })) })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showCheckoutMsg(data.error || 'Checkout konnte nicht gestartet werden.', 'error');
+        return;
+      }
+
+      stripe = Stripe(data.publishableKey);
+      elements = stripe.elements({ clientSecret: data.clientSecret });
+      const paymentElement = elements.create('payment');
+      paymentElement.mount('#payment-element');
+
+      window.currentOrderId = data.orderId;
+
+      document.getElementById('payBtn').disabled = false;
+      document.getElementById('payBtn').textContent = 'Jetzt bezahlen';
+    } catch (err) {
+      showCheckoutMsg('Verbindung zum Server fehlgeschlagen.', 'error');
+    }
+  }
+
+  function closeCheckout() {
+    document.getElementById('checkoutOverlay').classList.remove('show');
+    document.getElementById('checkoutMsg').className = 'checkout-msg';
+  }
+
+  function showCheckoutMsg(text, type) {
+    const box = document.getElementById('checkoutMsg');
+    box.textContent = text;
+    box.className = `checkout-msg show ${type}`;
+  }
+
+  document.getElementById('paymentForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!stripe || !elements) return;
+
+    const payBtn = document.getElementById('payBtn');
+    payBtn.disabled = true;
+    payBtn.textContent = 'Verarbeitet …';
+
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: window.location.protocol === 'file:' ? 'https://uhlenhorst-backend.onrender.com/api/health' : window.location.href,
+      },
+      redirect: 'if_required',
+    });
+
+    if (error) {
+      showCheckoutMsg(error.message || 'Zahlung fehlgeschlagen.', 'error');
+      payBtn.disabled = false;
+      payBtn.textContent = 'Jetzt bezahlen';
+      return;
+    }
+
+    showCheckoutMsg('Zahlung erfolgreich! Vielen Dank für deine Bestellung.', 'success');
+    cart = [];
+    saveCart();
+    setTimeout(() => {
+      closeCheckout();
+      closeCart();
+    }, 2500);
+  });
+
+  updateCartBadge();
+  loadProducts();
+</script>
+
+</body>
+</html>
