@@ -46,6 +46,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 28px;
+    gap: 12px;
+    flex-wrap: nowrap;
   }
   .logo {
     color: var(--white);
@@ -53,6 +55,8 @@
     display: flex;
     align-items: baseline;
     gap: 8px;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
   .logo em { font-style: italic; color: var(--gold); }
   .auth-area {
@@ -161,6 +165,8 @@
     overflow: hidden;
     border: 1px solid var(--mist);
     background: var(--mist);
+    z-index: 1;
+    isolation: isolate; /* verhindert, dass Leaflets interne z-index-Werte (bis zu 1000) andere Seiteninhalte überlagern */
   }
   .leaflet-popup-content b { color: var(--deep); }
   .leaflet-popup-content .pop-cat {
@@ -197,6 +203,45 @@
     font-size: 0.82rem;
     font-weight: 700;
     flex-shrink: 0;
+    overflow: hidden;
+  }
+  .dir-letter-badge.has-photo {
+    cursor: zoom-in;
+  }
+  .dir-letter-badge img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  /* Lightbox (Foto-Vergrößerung) */
+  .lightbox-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(10,42,67,0.85);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    cursor: zoom-out;
+  }
+  .lightbox-overlay.show { display: flex; }
+  .lightbox-overlay img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    cursor: default;
+  }
+  .lightbox-close {
+    position: fixed;
+    top: 22px; right: 28px;
+    font-size: 2rem;
+    color: var(--white);
+    background: none;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
   }
   .dir-info { flex: 1; min-width: 0; }
   .biz-name { font-weight: 600; font-size: 0.98rem; color: var(--deep); }
@@ -214,6 +259,25 @@
   }
   .biz-desc { font-size: 0.86rem; color: #5c6e79; margin-top: 6px; }
   .biz-address { font-size: 0.82rem; color: #8294a0; margin-top: 4px; }
+
+  .biz-contacts {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .contact-icon {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--mist);
+    color: var(--water);
+    transition: background 0.15s, color 0.15s;
+  }
+  .contact-icon:hover {
+    background: var(--water);
+    color: var(--white);
+  }
+  .contact-icon svg { width: 16px; height: 16px; }
 
   .empty-state, .loading-state {
     padding: 60px 30px;
@@ -242,7 +306,8 @@
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(10,42,67,0.55);
-    z-index: 200;
+    z-index: 2000;
+    isolation: isolate;
     align-items: center;
     justify-content: center;
     padding: 20px;
@@ -256,6 +321,8 @@
     padding: 32px;
     max-height: 90vh;
     overflow-y: auto;
+    position: relative;
+    z-index: 1;
   }
   .modal-box h2 { color: var(--deep); font-size: 1.3rem; margin-bottom: 6px; }
   .modal-sub { font-size: 0.86rem; color: #6b7d89; margin-bottom: 20px; }
@@ -275,6 +342,11 @@
     font-family: 'Inter', sans-serif;
     font-size: 0.9rem;
   }
+  .field input[type="file"] {
+    padding: 8px 13px;
+    background: var(--white);
+    cursor: pointer;
+  }
   .field textarea { resize: vertical; min-height: 70px; }
   .field input:focus, .field textarea:focus { outline: none; border-color: var(--water); }
   .modal-actions {
@@ -284,6 +356,7 @@
   }
   .btn-deep { background: var(--deep); color: var(--white); flex: 1; padding: 12px; }
   .btn-deep:hover { background: var(--water); }
+  .btn-deep:disabled { background: #9fb3c0; cursor: default; }
   .btn-cancel { background: transparent; color: #6b7d89; border: 1px solid #d8e0e6; padding: 12px; }
   .modal-msg {
     font-size: 0.85rem;
@@ -312,6 +385,41 @@
   }
   @media (max-width: 760px) {
     .main-nav { display: none !important; }
+  }
+
+  /* ---- Mobile-Optimierung ---- */
+  @media (max-width: 600px) {
+    .nav-wrap { padding: 12px 14px; }
+    .logo { font-size: 0.92rem; gap: 4px; }
+    .auth-area { gap: 8px; flex-shrink: 0; }
+    .btn { padding: 7px 12px; font-size: 0.76rem; white-space: nowrap; }
+    .user-pill { display: none; } /* Platz sparen auf sehr kleinen Screens, Abmelden-Button bleibt sichtbar */
+
+    .hero-strip { padding: 28px 16px 26px; }
+    .hero-strip h1 { font-size: 1.5rem; }
+
+    main { padding: 24px 16px 60px; }
+
+    .modal-box { padding: 22px 18px; max-height: 92vh; }
+    .modal-box h2 { font-size: 1.15rem; }
+    .field input, .field textarea { font-size: 1rem; } /* verhindert Auto-Zoom auf iOS */
+    .modal-actions { flex-direction: column; }
+    .modal-actions .btn-cancel { order: 2; }
+    .modal-actions .btn-deep { order: 1; }
+
+    .dir-item { padding: 14px 14px; gap: 10px; }
+    .request-photo, .dir-letter-badge { width: 44px; height: 44px; }
+    .biz-name { font-size: 0.92rem; }
+    .biz-contacts { flex-wrap: wrap; }
+    .contact-icon { width: 36px; height: 36px; }
+
+    .az-row { gap: 3px; }
+    .az-letter { min-width: 26px; height: 26px; font-size: 0.74rem; }
+  }
+
+  @media (max-width: 380px) {
+    .logo { font-size: 0.8rem; }
+    .btn { padding: 6px 10px; font-size: 0.72rem; }
   }
 </style>
 </head>
@@ -406,6 +514,22 @@
         <label for="bizWebsite">Website</label>
         <input type="text" id="bizWebsite" placeholder="www.beispiel.de">
       </div>
+      <div class="field">
+        <label for="bizEmail">E-Mail-Adresse (optional)</label>
+        <input type="email" id="bizEmail" placeholder="kontakt@beispiel.de">
+      </div>
+      <div class="field">
+        <label for="bizWhatsapp">WhatsApp-Nummer (optional)</label>
+        <input type="text" id="bizWhatsapp" placeholder="z.B. 49176 12345678 (ohne Leerzeichen/Sonderzeichen)">
+      </div>
+      <div class="field">
+        <label for="bizPhoto">Foto (optional)</label>
+        <input type="file" id="bizPhoto" accept="image/*">
+        <div id="photoPreviewWrap" style="margin-top:10px; display:none;">
+          <img id="photoPreview" style="max-width:120px; max-height:120px; border-radius:6px; border:1px solid #d8e0e6;">
+        </div>
+        <div id="uploadStatus" style="font-size:0.78rem; color:#8294a0; margin-top:5px;"></div>
+      </div>
 
       <div class="modal-actions">
         <button type="button" class="btn-cancel" onclick="closeSubmitModal()">Abbrechen</button>
@@ -413,6 +537,12 @@
       </div>
     </form>
   </div>
+</div>
+
+<!-- Lightbox (Foto-Vergrößerung) -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox(event)">&times;</button>
+  <img id="lightboxImg" src="" alt="">
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -446,6 +576,23 @@
     div.textContent = str || '';
     return div.innerHTML;
   }
+
+  // ---- Lightbox (Foto groß anzeigen) ----
+  function openLightbox(event, imageUrl, name) {
+    event.stopPropagation(); // verhindert, dass gleichzeitig focusOnMap() ausgelöst wird
+    document.getElementById('lightboxImg').src = imageUrl;
+    document.getElementById('lightboxImg').alt = name;
+    document.getElementById('lightboxOverlay').classList.add('show');
+  }
+
+  function closeLightbox(event) {
+    if (event) event.stopPropagation();
+    document.getElementById('lightboxOverlay').classList.remove('show');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
 
   function initMap() {
     leafletMap = L.map('mapBox').setView(UHLENHORST_CENTER, 14);
@@ -553,14 +700,47 @@
 
     container.innerHTML = `<div class="dir-list">` + sorted.map(biz => {
       const hasCoords = biz.latitude && biz.longitude;
+      const hasPhoto = !!biz.image_url;
+      const badgeContent = hasPhoto
+        ? `<img src="${escapeHtml(biz.image_url)}" alt="${escapeHtml(biz.name)}">`
+        : escapeHtml(biz.name.charAt(0).toUpperCase());
+      const badgeClick = hasPhoto
+        ? `onclick="openLightbox(event, '${escapeHtml(biz.image_url)}', '${escapeHtml(biz.name).replace(/'/g, "\\'")}')"`
+        : '';
+
+      const contactIcons = [];
+      if (biz.business_email) {
+        contactIcons.push(`
+          <a class="contact-icon" href="mailto:${escapeHtml(biz.business_email)}" onclick="event.stopPropagation()" title="E-Mail senden" aria-label="E-Mail senden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M22 6 12 13 2 6"/></svg>
+          </a>`);
+      }
+      if (biz.phone) {
+        contactIcons.push(`
+          <a class="contact-icon" href="tel:${escapeHtml(biz.phone.replace(/\s+/g, ''))}" onclick="event.stopPropagation()" title="Anrufen" aria-label="Anrufen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.91.69 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.33 1.85.56 2.81.69A2 2 0 0 1 22 16.92z"/></svg>
+          </a>`);
+      }
+      if (biz.whatsapp_number) {
+        const waNumber = biz.whatsapp_number.replace(/\D/g, '');
+        contactIcons.push(`
+          <a class="contact-icon" href="https://wa.me/${waNumber}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="WhatsApp schreiben" aria-label="WhatsApp schreiben">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.32A8.86 8.86 0 0 0 12.05 4a8.94 8.94 0 0 0-7.74 13.41L3 21l3.7-1.27a8.93 8.93 0 0 0 5.36 1.72A8.94 8.94 0 0 0 17.6 6.32ZM12.06 19.7a7.42 7.42 0 0 1-3.78-1.04l-.27-.16-2.2.76.73-2.14-.18-.28a7.4 7.4 0 1 1 5.7 2.86Zm4.06-5.55c-.22-.11-1.3-.64-1.5-.72s-.35-.11-.5.11-.58.72-.71.87-.27.16-.49.05a6 6 0 0 1-2.95-2.58c-.22-.38.22-.35.63-1.18.07-.15.04-.27-.03-.38s-.5-1.21-.68-1.66-.36-.38-.5-.38h-.43a.84.84 0 0 0-.61.29 2.55 2.55 0 0 0-.8 1.9c0 1.12.82 2.2 1.18 2.65a7.07 7.07 0 0 0 4.36 3.27c1.6.46 1.6.39 2.18.32a2.16 2.16 0 0 0 1.43-1c.18-.36.18-.66.13-.72s-.31-.16-.71-.36Z"/></svg>
+          </a>`);
+      }
+      const contactsHtml = contactIcons.length > 0
+        ? `<div class="biz-contacts">${contactIcons.join('')}</div>`
+        : '';
+
       return `
       <div class="dir-item ${hasCoords ? '' : 'no-coords'}" ${hasCoords ? `onclick="focusOnMap('${biz.id}')"` : ''}>
-        <div class="dir-letter-badge">${escapeHtml(biz.name.charAt(0).toUpperCase())}</div>
+        <div class="dir-letter-badge ${hasPhoto ? 'has-photo' : ''}" ${badgeClick}>${badgeContent}</div>
         <div class="dir-info">
           <div class="biz-name">${escapeHtml(biz.name)}</div>
           <span class="biz-cat">${escapeHtml(biz.category)}</span>
           ${biz.description ? `<div class="biz-desc">${escapeHtml(biz.description)}</div>` : ''}
           <div class="biz-address">${escapeHtml(biz.address)}${hasCoords ? '' : ' · Position nicht auf der Karte verfügbar'}</div>
+          ${contactsHtml}
         </div>
       </div>
     `;
@@ -607,6 +787,73 @@
     }
   }
 
+  // Zeigt eine kleine Vorschau, sobald ein Foto ausgewählt wurde
+  document.addEventListener('DOMContentLoaded', () => {
+    const photoInput = document.getElementById('bizPhoto');
+    if (photoInput) {
+      photoInput.addEventListener('change', () => {
+        const file = photoInput.files[0];
+        const wrap = document.getElementById('photoPreviewWrap');
+        const img = document.getElementById('photoPreview');
+        if (file) {
+          img.src = URL.createObjectURL(file);
+          wrap.style.display = 'block';
+        } else {
+          wrap.style.display = 'none';
+        }
+      });
+    }
+  });
+
+  // Lädt ein Foto zu Cloudinary hoch und gibt die fertige Bild-URL zurück.
+  // Gibt null zurück, wenn kein Foto ausgewählt wurde oder der Upload fehlschlägt.
+  async function uploadPhotoIfPresent(currentToken) {
+    const fileInput = document.getElementById('bizPhoto');
+    const statusEl = document.getElementById('uploadStatus');
+    const file = fileInput.files[0];
+
+    if (!file) return null;
+
+    statusEl.textContent = 'Foto wird hochgeladen …';
+
+    try {
+      // 1. Signatur vom eigenen Server holen (erfordert Login)
+      const sigRes = await fetch(`${API_BASE}/upload/signature`, {
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      });
+      if (!sigRes.ok) {
+        statusEl.textContent = 'Foto-Upload nicht möglich – bitte ohne Foto einreichen.';
+        return null;
+      }
+      const sig = await sigRes.json();
+
+      // 2. Bild direkt zu Cloudinary hochladen
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('api_key', sig.apiKey);
+      formData.append('timestamp', sig.timestamp);
+      formData.append('signature', sig.signature);
+
+      const uploadRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`,
+        { method: 'POST', body: formData }
+      );
+      const uploadData = await uploadRes.json();
+
+      if (!uploadData.secure_url) {
+        statusEl.textContent = 'Foto-Upload fehlgeschlagen – bitte ohne Foto einreichen.';
+        return null;
+      }
+
+      statusEl.textContent = 'Foto erfolgreich hochgeladen.';
+      return uploadData.secure_url;
+
+    } catch (err) {
+      statusEl.textContent = 'Foto-Upload fehlgeschlagen – bitte ohne Foto einreichen.';
+      return null;
+    }
+  }
+
   async function handleSubmitBusiness(event) {
     event.preventDefault();
     const msgBox = document.getElementById('modalMsg');
@@ -618,6 +865,7 @@
     const currentToken = localStorage.getItem('uhlenhorst_token');
     const address = document.getElementById('bizAddress').value.trim();
     const coords = await geocodeAddress(address);
+    const imageUrl = await uploadPhotoIfPresent(currentToken);
 
     const payload = {
       name: document.getElementById('bizName').value.trim(),
@@ -626,8 +874,11 @@
       description: document.getElementById('bizDescription').value.trim(),
       phone: document.getElementById('bizPhone').value.trim(),
       website: document.getElementById('bizWebsite').value.trim(),
+      business_email: document.getElementById('bizEmail').value.trim(),
+      whatsapp_number: document.getElementById('bizWhatsapp').value.trim(),
       latitude: coords.latitude,
       longitude: coords.longitude,
+      image_url: imageUrl,
     };
 
     try {
@@ -652,6 +903,7 @@
       msgBox.textContent = 'Vielen Dank! Dein Geschäft wird in Kürze geprüft.';
       msgBox.className = 'modal-msg show success';
       document.getElementById('submitForm').reset();
+      document.getElementById('photoPreviewWrap').style.display = 'none';
       setTimeout(() => closeSubmitModal(), 1800);
       btn.disabled = false;
       btn.textContent = 'Einreichen';
