@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unser Uhlenhorst – Auf der Uhlenhorst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep: #0A2A43;
+    --water: #13456B;
+    --water-light: #2E6690;
+    --white: #FFFFFF;
+    --mist: #E8EDF2;
+    --gold: #C9A24B;
+    --ink: #0E1B26;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; color: var(--ink); background: var(--white); line-height: 1.6; }
+  a { text-decoration: none; color: inherit; }
+  h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+
+  /* === Shared header/nav === */
+  header { background: var(--deep); border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 100; }
+  .nav-wrap { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; gap: 24px; }
+  .logo { color: var(--white); font-size: 1.15rem; display: flex; align-items: baseline; gap: 8px; flex-shrink: 0; }
+  .logo em { font-style: italic; color: var(--gold); }
+  nav.main-nav { display: flex; gap: 26px; }
+  nav.main-nav a { color: rgba(255,255,255,0.75); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; white-space: nowrap; }
+  nav.main-nav a:hover, nav.main-nav a.active { color: var(--white); }
+  .auth-area { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .btn { padding: 9px 18px; border-radius: 5px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-gold { background: var(--gold); color: var(--deep); }
+  .btn-gold:hover { background: #d9b566; }
+  .btn-ghost { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
+  .btn-ghost:hover { border-color: var(--white); }
+  .user-pill { color: rgba(255,255,255,0.85); font-size: 0.85rem; white-space: nowrap; }
+  .mobile-toggle { display: none; background: none; border: none; color: var(--white); font-size: 1.4rem; cursor: pointer; }
+
+  @media (max-width: 880px) {
+    nav.main-nav { display: none; }
+    .mobile-toggle { display: block; }
+  }
+
+  /* === Page hero (kleiner als Startseite) === */
+  .page-hero { position: relative; background: linear-gradient(160deg, var(--deep) 0%, var(--water) 100%); color: var(--white); padding: 56px 28px; }
+  .page-hero-inner { max-width: 880px; margin: 0 auto; }
+  .eyebrow { font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .eyebrow .dash { width: 28px; height: 1px; background: var(--gold); }
+  .page-hero h1 { font-size: 2.4rem; line-height: 1.15; }
+  .page-hero h1 em { font-style: italic; color: var(--gold); }
+
+  /* === Story text block === */
+  main { max-width: 880px; margin: 0 auto; padding: 56px 28px 0; }
+  .story-text { font-size: 1.05rem; color: #2c3a44; }
+  .story-text p { margin-bottom: 22px; }
+  .story-text p:first-of-type { font-size: 1.15rem; }
+  .updated-note { font-size: 0.8rem; color: #8a98a3; margin-top: 8px; }
+
+  /* === Image pairs section === */
+  .pairs-section { max-width: 1180px; margin: 0 auto; padding: 64px 28px 80px; }
+  .section-head { margin-bottom: 38px; text-align: center; }
+  .section-head .eyebrow2 { font-size: 0.76rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--water); font-weight: 700; margin-bottom: 8px; }
+  .section-head h2 { font-size: 1.9rem; color: var(--deep); }
+
+  .pair-block { margin-bottom: 56px; }
+  .pair-block:last-child { margin-bottom: 0; }
+  .pair-block .pair-caption { font-family: 'Fraunces', serif; font-size: 1.15rem; color: var(--deep); margin-bottom: 16px; text-align: center; }
+  .pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; border-radius: 10px; overflow: hidden; box-shadow: 0 16px 40px rgba(10,42,67,0.10); }
+  .pair-img-wrap { position: relative; aspect-ratio: 4/3; background: var(--mist); overflow: hidden; }
+  .pair-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pair-tag { position: absolute; top: 12px; left: 12px; background: rgba(10,42,67,0.78); color: var(--white); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; padding: 5px 11px; border-radius: 3px; }
+  .pair-tag.then { background: rgba(201,162,75,0.9); color: var(--deep); }
+
+  /* === Single image (kein Paar) === */
+  .single-img-wrap { aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; box-shadow: 0 16px 40px rgba(10,42,67,0.10); margin-bottom: 56px; }
+  .single-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .empty-state { text-align: center; color: #8a98a3; padding: 40px 0; font-size: 0.95rem; }
+  .loading-state { text-align: center; color: #8a98a3; padding: 40px 0; font-size: 0.95rem; }
+
+  footer { background: var(--deep); color: rgba(255,255,255,0.6); padding: 50px 28px 30px; margin-top: 40px; }
+  .footer-inner { max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .footer-inner .fname { color: var(--white); font-family: 'Fraunces', serif; font-size: 1.1rem; }
+  .footer-inner span { font-size: 0.85rem; }
+
+  @media (max-width: 700px) {
+    .page-hero h1 { font-size: 1.9rem; }
+    .pair-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <a href="auf-der-uhlenhorst-home.html" class="logo">Auf der <em>Uhlenhorst</em></a>
+    <nav class="main-nav">
+      <a href="auf-der-uhlenhorst-verzeichnis.html">Geschäfte</a>
+      <a href="auf-der-uhlenhorst-termine.html">Moin Uhlenhorst</a>
+      <a href="unser-uhlenhorst.html" class="active">Unser Uhlenhorst</a>
+      <a href="auf-der-uhlenhorst-forum.html">Forum</a>
+      <a href="auf-der-uhlenhorst-shop.html">Shop</a>
+    </nav>
+    <div class="auth-area" id="authArea">
+      <button class="btn btn-ghost" onclick="window.location.href='auf-der-uhlenhorst-login.html'">Anmelden</button>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="eyebrow"><span class="dash"></span>Geschichte &amp; Gesicht des Stadtteils</div>
+    <h1>Unser <em>Uhlenhorst</em></h1>
+  </div>
+</section>
+
+<main>
+  <div class="story-text" id="storyText">
+    <p class="loading-state">Text wird geladen …</p>
+  </div>
+  <p class="updated-note" id="updatedNote"></p>
+</main>
+
+<section class="pairs-section">
+  <div class="section-head">
+    <div class="eyebrow2">Damals und heute</div>
+    <h2>Wie sich unser Viertel verändert hat</h2>
+  </div>
+  <div id="imagesContainer">
+    <p class="loading-state">Bilder werden geladen …</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span class="fname">Auf der Uhlenhorst</span>
+    <span>© 2026 · Hamburg · Uhlenhorst</span>
+  </div>
+</footer>
+
+<script>
+  const API_BASE = 'https://uhlenhorst-backend.onrender.com';
+
+  // --- Login-Status wie auf den anderen Seiten ---
+  const user = JSON.parse(localStorage.getItem('uhlenhorst_user') || 'null');
+  if (user) {
+    const authArea = document.getElementById('authArea');
+    let extra = '';
+    if (user.role === 'admin') {
+      extra = `<button class="btn btn-ghost" onclick="window.location.href='auf-der-uhlenhorst-admin.html'">Admin</button>`;
+    }
+    authArea.innerHTML = `
+      <span class="user-pill">Hallo, ${user.name.split(' ')[0]}</span>
+      ${extra}
+      <button class="btn btn-gold" onclick="logout()">Abmelden</button>
+    `;
+  }
+  function logout() {
+    localStorage.removeItem('uhlenhorst_token');
+    localStorage.removeItem('uhlenhorst_user');
+    window.location.reload();
+  }
+
+  // --- Text + Bilder von der API laden ---
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function renderText(body, updatedAt) {
+    const container = document.getElementById('storyText');
+    const paragraphs = (body || '').split(/\n\s*\n/).filter(p => p.trim().length > 0);
+    if (paragraphs.length === 0) {
+      container.innerHTML = '<p class="empty-state">Noch kein Text vorhanden.</p>';
+      return;
+    }
+    container.innerHTML = paragraphs.map(p => `<p>${escapeHtml(p.trim())}</p>`).join('');
+
+    if (updatedAt) {
+      const date = new Date(updatedAt);
+      document.getElementById('updatedNote').textContent =
+        'Zuletzt aktualisiert am ' + date.toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });
+    }
+  }
+
+  function renderImages(images) {
+    const container = document.getElementById('imagesContainer');
+    if (!images || images.length === 0) {
+      container.innerHTML = '<p class="empty-state">Noch keine Bilder vorhanden.</p>';
+      return;
+    }
+
+    // Bilder nach pair_group gruppieren; Bilder ohne pair_group einzeln zeigen
+    const groups = {};
+    const singles = [];
+    images.forEach(img => {
+      if (img.pair_group) {
+        if (!groups[img.pair_group]) groups[img.pair_group] = [];
+        groups[img.pair_group].push(img);
+      } else {
+        singles.push(img);
+      }
+    });
+
+    let html = '';
+
+    Object.keys(groups).forEach(groupKey => {
+      const pair = groups[groupKey].slice(0, 2);
+      const caption = pair[0].caption ? escapeHtml(pair[0].caption) : '';
+      html += `<div class="pair-block">`;
+      if (caption) html += `<div class="pair-caption">${caption}</div>`;
+      html += `<div class="pair-grid">`;
+      pair.forEach(img => {
+        const eraLower = (img.era || '').toLowerCase();
+        const isThen = eraLower.includes('früh') || eraLower.includes('damals') || eraLower.includes('vorher') || eraLower.includes('then');
+        const tagLabel = img.era ? escapeHtml(img.era) : (isThen ? 'Früher' : 'Heute');
+        html += `
+          <div class="pair-img-wrap">
+            <span class="pair-tag ${isThen ? 'then' : ''}">${tagLabel}</span>
+            <img src="${escapeHtml(img.image_url)}" alt="${caption || tagLabel}" loading="lazy">
+          </div>`;
+      });
+      html += `</div></div>`;
+    });
+
+    singles.forEach(img => {
+      html += `
+        <div class="single-img-wrap">
+          <img src="${escapeHtml(img.image_url)}" alt="${img.caption ? escapeHtml(img.caption) : 'Uhlenhorst'}" loading="lazy">
+        </div>`;
+    });
+
+    container.innerHTML = html;
+  }
+
+  async function loadPage() {
+    try {
+      const res = await fetch(`${API_BASE}/api/page`);
+      if (!res.ok) throw new Error('Antwort nicht ok');
+      const data = await res.json();
+      renderText(data.body, data.updated_at);
+      renderImages(data.images);
+    } catch (err) {
+      console.error('Fehler beim Laden der Seite:', err);
+      document.getElementById('storyText').innerHTML =
+        '<p class="empty-state">Inhalte konnten nicht geladen werden. Bitte später erneut versuchen.</p>';
+      document.getElementById('imagesContainer').innerHTML = '';
+    }
+  }
+
+  loadPage();
+</script>
+
+</body>
+</html>
