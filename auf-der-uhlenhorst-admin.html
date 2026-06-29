@@ -129,6 +129,27 @@
   }
   main.active { display: block; }
 
+  /* Tabs */
+  .admin-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid #dfe6eb;
+  }
+  .admin-tab {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6b7d89;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .admin-tab:hover { color: var(--deep); }
+  .admin-tab.active { color: var(--deep); border-bottom-color: var(--gold); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
   .page-head {
     margin-bottom: 28px;
   }
@@ -240,6 +261,142 @@
   .btn-reject:hover { background: var(--danger-bg); }
   .btn-approve:disabled, .btn-reject:disabled { opacity: 0.5; cursor: not-allowed; }
 
+  /* === Unser Uhlenhorst panel === */
+  .panel-card {
+    background: var(--white);
+    border-radius: 8px;
+    border: 1px solid #dfe6eb;
+    padding: 24px 26px;
+    margin-bottom: 24px;
+  }
+  .panel-card h3 {
+    font-family: 'Fraunces', serif;
+    color: var(--deep);
+    font-size: 1.1rem;
+    margin-bottom: 14px;
+  }
+  .panel-card textarea {
+    width: 100%;
+    min-height: 260px;
+    padding: 14px 16px;
+    border: 1px solid #d8e0e6;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    resize: vertical;
+    margin-bottom: 14px;
+  }
+  .panel-card textarea:focus { outline: none; border-color: var(--water); }
+  .btn-save {
+    background: var(--deep);
+    color: var(--white);
+    border: none;
+    padding: 11px 22px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .btn-save:hover { background: var(--water); }
+  .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+  .save-hint { font-size: 0.8rem; color: #8294a0; margin-top: 8px; }
+
+  .add-image-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .add-image-form .full { grid-column: 1 / -1; }
+  .add-image-form label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--deep);
+    margin-bottom: 6px;
+  }
+  .add-image-form input, .add-image-form select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d8e0e6;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-family: 'Inter', sans-serif;
+  }
+  .add-image-form input:focus, .add-image-form select:focus { outline: none; border-color: var(--water); }
+  .file-drop {
+    border: 2px dashed #c5cdd3;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #6b7d89;
+    font-size: 0.88rem;
+  }
+  .file-drop:hover { border-color: var(--water-light); background: rgba(19,69,107,0.03); }
+  .file-drop.has-file { border-color: var(--success); color: var(--success); }
+  .upload-progress {
+    font-size: 0.82rem;
+    color: var(--water);
+    margin-top: 8px;
+    display: none;
+  }
+  .upload-progress.show { display: block; }
+
+  .image-list-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .image-list-item {
+    background: var(--white);
+    border: 1px solid #dfe6eb;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .image-list-item img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+    background: var(--mist);
+  }
+  .image-list-meta {
+    padding: 10px 12px;
+  }
+  .image-list-meta .cap {
+    font-size: 0.82rem;
+    color: var(--deep);
+    font-weight: 600;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .image-list-meta .era-tag {
+    font-size: 0.72rem;
+    color: #8294a0;
+  }
+  .image-list-actions {
+    display: flex;
+    gap: 6px;
+    padding: 0 12px 12px;
+  }
+  .btn-mini-del {
+    flex: 1;
+    background: var(--white);
+    color: var(--danger);
+    border: 1px solid #f0c4c0;
+    padding: 7px;
+    border-radius: 5px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-mini-del:hover { background: var(--danger-bg); }
+
   .toast {
     position: fixed;
     bottom: 24px;
@@ -269,6 +426,8 @@
     .stats-row { grid-template-columns: 1fr; }
     .request-top { flex-direction: column; }
     .request-meta { text-align: left; }
+    .add-image-form { grid-template-columns: 1fr; }
+    .image-list-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
@@ -300,37 +459,101 @@
 
 <!-- Main Dashboard -->
 <main id="mainView">
-  <div class="page-head">
-    <div class="eyebrow">Geschäftsverzeichnis</div>
-    <h1>Ausstehende Einträge</h1>
+
+  <div class="admin-tabs">
+    <div class="admin-tab active" data-tab="businesses" onclick="switchTab('businesses')">Geschäftsverzeichnis</div>
+    <div class="admin-tab" data-tab="uhlenhorst" onclick="switchTab('uhlenhorst')">Unser Uhlenhorst</div>
   </div>
 
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="num" id="statPending">–</div>
-      <div class="label">Warten auf Prüfung</div>
+  <!-- ===== TAB: Geschäftsverzeichnis ===== -->
+  <div class="tab-panel active" id="tab-businesses">
+    <div class="page-head">
+      <div class="eyebrow">Geschäftsverzeichnis</div>
+      <h1>Ausstehende Einträge</h1>
     </div>
-    <div class="stat-card">
-      <div class="num" id="statApproved">–</div>
-      <div class="label">Freigegeben</div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="num" id="statPending">–</div>
+        <div class="label">Warten auf Prüfung</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="statApproved">–</div>
+        <div class="label">Freigegeben</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="statTotal">–</div>
+        <div class="label">Gesamt im Verzeichnis</div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="num" id="statTotal">–</div>
-      <div class="label">Gesamt im Verzeichnis</div>
+
+    <div id="listContainer">
+      <div class="loading-row">Lädt ausstehende Einträge …</div>
+    </div>
+
+    <div class="page-head" style="margin-top:48px;">
+      <div class="eyebrow">Geschäftsverzeichnis</div>
+      <h1>Freigegebene Geschäfte</h1>
+    </div>
+    <div id="approvedContainer">
+      <div class="loading-row">Lädt freigegebene Geschäfte …</div>
     </div>
   </div>
 
-  <div id="listContainer">
-    <div class="loading-row">Lädt ausstehende Einträge …</div>
+  <!-- ===== TAB: Unser Uhlenhorst ===== -->
+  <div class="tab-panel" id="tab-uhlenhorst">
+    <div class="page-head">
+      <div class="eyebrow">Stadtteilseite</div>
+      <h1>Unser Uhlenhorst</h1>
+    </div>
+
+    <div class="panel-card">
+      <h3>Text der Seite</h3>
+      <textarea id="uhlenhorstText" placeholder="Text wird geladen …"></textarea>
+      <button class="btn-save" id="saveTextBtn" onclick="saveUhlenhorstText()">Text speichern</button>
+      <div class="save-hint">Absätze werden durch eine Leerzeile getrennt. Änderungen erscheinen sofort auf der öffentlichen Seite.</div>
+    </div>
+
+    <div class="panel-card">
+      <h3>Neues Bild hinzufügen</h3>
+      <div class="file-drop" id="fileDropZone" onclick="document.getElementById('imageFileInput').click()">
+        📷 Klicken, um ein Bild auszuwählen
+      </div>
+      <input type="file" id="imageFileInput" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+      <div class="upload-progress" id="uploadProgress"></div>
+
+      <div class="add-image-form" style="margin-top:16px;">
+        <div>
+          <label>Beschriftung (z. B. "Hofweg, Blick zur Alster")</label>
+          <input type="text" id="newImgCaption" placeholder="Beschriftung">
+        </div>
+        <div>
+          <label>Ära</label>
+          <select id="newImgEra">
+            <option value="Früher">Früher</option>
+            <option value="Heute">Heute</option>
+          </select>
+        </div>
+        <div>
+          <label>Paar-Gruppe (für Vorher/Nachher gleicher Name)</label>
+          <input type="text" id="newImgPairGroup" placeholder="z. B. hofweg-1">
+        </div>
+        <div>
+          <label>Sortierung (Zahl, niedriger = weiter oben)</label>
+          <input type="number" id="newImgSortOrder" value="0">
+        </div>
+      </div>
+      <button class="btn-save" id="addImageBtn" onclick="addImage()" disabled>Erst Bild auswählen</button>
+    </div>
+
+    <div class="panel-card">
+      <h3>Vorhandene Bilder</h3>
+      <div id="imagesAdminContainer">
+        <div class="loading-row">Lädt Bilder …</div>
+      </div>
+    </div>
   </div>
 
-  <div class="page-head" style="margin-top:48px;">
-    <div class="eyebrow">Geschäftsverzeichnis</div>
-    <h1>Freigegebene Geschäfte</h1>
-  </div>
-  <div id="approvedContainer">
-    <div class="loading-row">Lädt freigegebene Geschäfte …</div>
-  </div>
 </main>
 
 <div class="toast" id="toast"></div>
@@ -339,6 +562,8 @@
   const API_BASE = 'https://uhlenhorst-backend.onrender.com/api';
   let token = localStorage.getItem('uhlenhorst_token');
   let user = JSON.parse(localStorage.getItem('uhlenhorst_user') || 'null');
+  let selectedFile = null;
+  let uhlenhorstDataLoaded = false;
 
   function showToast(text, isError) {
     const t = document.getElementById('toast');
@@ -416,6 +641,18 @@
     document.getElementById('mainView').classList.add('active');
     document.getElementById('adminName').textContent = user.name;
     loadPendingBusinesses();
+  }
+
+  function switchTab(tabName) {
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.admin-tab[data-tab="${tabName}"]`).classList.add('active');
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+
+    if (tabName === 'uhlenhorst' && !uhlenhorstDataLoaded) {
+      loadUhlenhorstPage();
+      uhlenhorstDataLoaded = true;
+    }
   }
 
   async function loadPendingBusinesses() {
@@ -575,6 +812,205 @@
     } catch (err) {
       showToast('Verbindung zum Server fehlgeschlagen.', true);
       card.querySelectorAll('button').forEach(b => b.disabled = false);
+    }
+  }
+
+  // ===== Unser Uhlenhorst: Text + Bilder =====
+
+  async function loadUhlenhorstPage() {
+    try {
+      const res = await fetch(`${API_BASE}/page`);
+      const data = await res.json();
+      document.getElementById('uhlenhorstText').value = data.body || '';
+      renderImagesAdmin(data.images || []);
+    } catch (err) {
+      showToast('Inhalte konnten nicht geladen werden.', true);
+    }
+  }
+
+  async function saveUhlenhorstText() {
+    const btn = document.getElementById('saveTextBtn');
+    const body = document.getElementById('uhlenhorstText').value;
+    btn.disabled = true;
+    btn.textContent = 'Speichert …';
+
+    try {
+      const res = await fetch(`${API_BASE}/page/text`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ body })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast(data.error || 'Speichern fehlgeschlagen.', true);
+      } else {
+        showToast('Text gespeichert.');
+      }
+    } catch (err) {
+      showToast('Verbindung zum Server fehlgeschlagen.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Text speichern';
+    }
+  }
+
+  function handleFileSelect(event) {
+    const file = event.target.files[0];
+    const zone = document.getElementById('fileDropZone');
+    const addBtn = document.getElementById('addImageBtn');
+
+    if (!file) {
+      selectedFile = null;
+      zone.textContent = '📷 Klicken, um ein Bild auszuwählen';
+      zone.classList.remove('has-file');
+      addBtn.disabled = true;
+      addBtn.textContent = 'Erst Bild auswählen';
+      return;
+    }
+
+    selectedFile = file;
+    zone.textContent = '✓ ' + file.name;
+    zone.classList.add('has-file');
+    addBtn.disabled = false;
+    addBtn.textContent = 'Bild hinzufügen';
+  }
+
+  async function addImage() {
+    if (!selectedFile) return;
+
+    const btn = document.getElementById('addImageBtn');
+    const progress = document.getElementById('uploadProgress');
+    btn.disabled = true;
+    btn.textContent = 'Lädt hoch …';
+    progress.classList.add('show');
+    progress.textContent = 'Bild wird zu Cloudinary hochgeladen …';
+
+    try {
+      // 1. Signatur vom Backend holen
+      const sigRes = await fetch(`${API_BASE}/upload/signature`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!sigRes.ok) throw new Error('Signatur konnte nicht geholt werden.');
+      const sig = await sigRes.json();
+
+      // 2. Direkt zu Cloudinary hochladen
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('api_key', sig.apiKey);
+      formData.append('timestamp', sig.timestamp);
+      formData.append('signature', sig.signature);
+
+      const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      const cloudData = await cloudRes.json();
+      if (!cloudData.secure_url) throw new Error('Upload zu Cloudinary fehlgeschlagen.');
+
+      progress.textContent = 'Bild wird gespeichert …';
+
+      // 3. URL + Metadaten im Backend speichern
+      const caption = document.getElementById('newImgCaption').value.trim();
+      const era = document.getElementById('newImgEra').value;
+      const pairGroup = document.getElementById('newImgPairGroup').value.trim();
+      const sortOrder = parseInt(document.getElementById('newImgSortOrder').value, 10) || 0;
+
+      const saveRes = await fetch(`${API_BASE}/page/images`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          image_url: cloudData.secure_url,
+          caption: caption || null,
+          era: era || null,
+          pair_group: pairGroup || null,
+          sort_order: sortOrder
+        })
+      });
+      const saveData = await saveRes.json();
+
+      if (!saveRes.ok) {
+        showToast(saveData.error || 'Speichern fehlgeschlagen.', true);
+        return;
+      }
+
+      showToast('Bild hinzugefügt.');
+
+      // Formular zurücksetzen
+      document.getElementById('imageFileInput').value = '';
+      document.getElementById('newImgCaption').value = '';
+      document.getElementById('newImgPairGroup').value = '';
+      document.getElementById('newImgSortOrder').value = '0';
+      handleFileSelect({ target: { files: [] } });
+
+      loadUhlenhorstPage();
+    } catch (err) {
+      console.error(err);
+      showToast(err.message || 'Hochladen fehlgeschlagen.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Bild hinzufügen';
+      progress.classList.remove('show');
+    }
+  }
+
+  function renderImagesAdmin(images) {
+    const container = document.getElementById('imagesAdminContainer');
+
+    if (images.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">–</div>
+          <h3>Noch keine Bilder</h3>
+          <p>Füge oben dein erstes Bild hinzu.</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = `<div class="image-list-grid">` + images.map(img => `
+      <div class="image-list-item" id="img-admin-${img.id}">
+        <img src="${escapeHtml(img.image_url)}" alt="${escapeHtml(img.caption || '')}">
+        <div class="image-list-meta">
+          <div class="cap">${escapeHtml(img.caption || 'Ohne Beschriftung')}</div>
+          <div class="era-tag">${escapeHtml(img.era || '–')}${img.pair_group ? ' · Gruppe: ' + escapeHtml(img.pair_group) : ''}</div>
+        </div>
+        <div class="image-list-actions">
+          <button class="btn-mini-del" onclick="deleteImage('${img.id}')">Löschen</button>
+        </div>
+      </div>
+    `).join('') + `</div>`;
+  }
+
+  async function deleteImage(id) {
+    if (!confirm('Dieses Bild wirklich löschen?')) return;
+
+    const item = document.getElementById(`img-admin-${id}`);
+    if (item) item.style.opacity = '0.4';
+
+    try {
+      const res = await fetch(`${API_BASE}/page/images/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast(data.error || 'Löschen fehlgeschlagen.', true);
+        if (item) item.style.opacity = '1';
+        return;
+      }
+
+      showToast('Bild gelöscht.');
+      loadUhlenhorstPage();
+    } catch (err) {
+      showToast('Verbindung zum Server fehlgeschlagen.', true);
+      if (item) item.style.opacity = '1';
     }
   }
 
