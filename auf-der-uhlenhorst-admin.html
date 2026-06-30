@@ -463,6 +463,7 @@
   <div class="admin-tabs">
     <div class="admin-tab active" data-tab="businesses" onclick="switchTab('businesses')">Geschäftsverzeichnis</div>
     <div class="admin-tab" data-tab="uhlenhorst" onclick="switchTab('uhlenhorst')">Unser Uhlenhorst</div>
+    <div class="admin-tab" data-tab="shop" onclick="switchTab('shop')">Shop</div>
   </div>
 
   <!-- ===== TAB: Geschäftsverzeichnis ===== -->
@@ -554,6 +555,31 @@
     </div>
   </div>
 
+  <!-- ===== TAB: Shop ===== -->
+  <div class="tab-panel" id="tab-shop">
+    <div class="page-head">
+      <div class="eyebrow">Shop</div>
+      <h1>Produkte</h1>
+    </div>
+
+    <div class="panel-card">
+      <h3>Printful-Synchronisierung</h3>
+      <p style="font-size:0.88rem; color:#5c6e79; margin-bottom:16px;">
+        Holt alle Produkte aus deinem Printful-Konto und gleicht sie mit dem Shop ab. Neue Produkte werden hinzugefügt, bestehende aktualisiert (Preis, Bild).
+      </p>
+      <button class="btn-save" id="syncPrintfulBtn" onclick="syncPrintful()">Produkte von Printful synchronisieren</button>
+      <div class="save-hint" id="syncResult"></div>
+    </div>
+
+    <div class="panel-card">
+      <h3>Aktuelle Produkte im Shop</h3>
+      <div id="shopProductsContainer">
+        <div class="loading-row">Lädt Produkte …</div>
+      </div>
+    </div>
+  </div>
+
+
 </main>
 
 <div class="toast" id="toast"></div>
@@ -564,6 +590,7 @@
   let user = JSON.parse(localStorage.getItem('uhlenhorst_user') || 'null');
   let selectedFile = null;
   let uhlenhorstDataLoaded = false;
+  let shopDataLoaded = false;
 
   function showToast(text, isError) {
     const t = document.getElementById('toast');
@@ -652,6 +679,10 @@
     if (tabName === 'uhlenhorst' && !uhlenhorstDataLoaded) {
       loadUhlenhorstPage();
       uhlenhorstDataLoaded = true;
+    }
+    if (tabName === 'shop' && !shopDataLoaded) {
+      loadShopProducts();
+      shopDataLoaded = true;
     }
   }
 
@@ -1012,6 +1043,74 @@
       showToast('Verbindung zum Server fehlgeschlagen.', true);
       if (item) item.style.opacity = '1';
     }
+  }
+
+  // ===== Shop: Printful-Sync + Produktliste =====
+
+  async function syncPrintful() {
+    const btn = document.getElementById('syncPrintfulBtn');
+    const resultEl = document.getElementById('syncResult');
+    btn.disabled = true;
+    btn.textContent = 'Synchronisiert …';
+    resultEl.textContent = 'Holt Produkte von Printful, das kann einen Moment dauern …';
+
+    try {
+      const res = await fetch(`${API_BASE}/shop/sync-printful`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast(data.error || 'Synchronisierung fehlgeschlagen.', true);
+        resultEl.textContent = '';
+      } else {
+        showToast(data.message || 'Synchronisierung abgeschlossen.');
+        resultEl.textContent = data.message || '';
+        loadShopProducts();
+      }
+    } catch (err) {
+      showToast('Verbindung zum Server fehlgeschlagen.', true);
+      resultEl.textContent = '';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Produkte von Printful synchronisieren';
+    }
+  }
+
+  async function loadShopProducts() {
+    const container = document.getElementById('shopProductsContainer');
+    try {
+      const res = await fetch(`${API_BASE}/shop/products`);
+      const products = await res.json();
+      renderShopProducts(products);
+    } catch (err) {
+      container.innerHTML = '<div class="loading-row">Verbindung zum Server fehlgeschlagen.</div>';
+    }
+  }
+
+  function renderShopProducts(products) {
+    const container = document.getElementById('shopProductsContainer');
+
+    if (products.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">–</div>
+          <h3>Noch keine Produkte</h3>
+          <p>Synchronisiere oben deine Printful-Produkte, um sie hier zu sehen.</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = `<div class="image-list-grid">` + products.map(p => `
+      <div class="image-list-item">
+        ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.name)}">` : `<div style="height:140px; background:var(--mist); display:flex; align-items:center; justify-content:center; color:#aab8c2; font-size:0.8rem;">Kein Bild</div>`}
+        <div class="image-list-meta">
+          <div class="cap">${escapeHtml(p.name)}</div>
+          <div class="era-tag">${(p.price_cents / 100).toFixed(2).replace('.', ',')} €</div>
+        </div>
+      </div>
+    `).join('') + `</div>`;
   }
 
   function escapeHtml(str) {
