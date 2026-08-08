@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Auf der Uhlenhorst</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --deep: #0A2A43;
@@ -17,53 +17,24 @@
     --ink: #0E1B26;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Inter', sans-serif; color: var(--ink); background: var(--white); line-height: 1.6; }
+  body { font-family: 'Poppins', sans-serif; font-weight: 700; color: var(--ink); background: var(--white); line-height: 1.6; }
   a { text-decoration: none; color: inherit; }
-  h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+  h1, h2, h3 { font-family: 'Poppins', sans-serif; font-weight: 700; }
 
   /* === Shared header/nav === */
   header { background: var(--deep); border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 100; }
   .nav-wrap { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; gap: 24px; }
   .logo { color: var(--white); font-size: 1.15rem; display: flex; align-items: baseline; gap: 8px; flex-shrink: 0; }
   .logo em { font-style: italic; color: var(--gold); }
-  nav.main-nav { display: flex; gap: 26px; }
-  nav.main-nav a { color: rgba(255,255,255,0.75); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; white-space: nowrap; }
-  nav.main-nav a:hover, nav.main-nav a.active { color: var(--white); }
   .auth-area { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-  .btn { padding: 9px 18px; border-radius: 5px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+  .uh-header-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .uh-logo-img { height: 40px; width: auto; display: block; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-width: 118px; height: 40px; padding: 0 18px; line-height: 1; border-radius: 5px; font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
   .btn-gold { background: var(--gold); color: var(--deep); }
   .btn-gold:hover { background: #d9b566; }
   .btn-ghost { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
   .btn-ghost:hover { border-color: var(--white); }
   .user-pill { color: rgba(255,255,255,0.85); font-size: 0.85rem; white-space: nowrap; }
-  .mobile-toggle { display: none; background: none; border: none; color: var(--white); font-size: 1.4rem; cursor: pointer; }
-
-  @media (max-width: 880px) {
-    nav.main-nav { display: none; }
-    .mobile-toggle { display: block; }
-  }
-
-  /* === Hero === */
-  .hero { position: relative; background: linear-gradient(160deg, var(--deep) 0%, var(--water) 100%); color: var(--white); overflow: hidden; padding: 80px 28px; }
-  .hero-inner { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 50px; align-items: center; }
-  .eyebrow { font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
-  .eyebrow .dash { width: 28px; height: 1px; background: var(--gold); }
-  .hero h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 20px; }
-  .hero h1 em { font-style: italic; color: var(--gold); }
-  .hero p.lead { font-size: 1.05rem; color: rgba(255,255,255,0.82); max-width: 440px; margin-bottom: 30px; }
-  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
-  .btn-lg { padding: 13px 26px; font-size: 0.95rem; border-radius: 4px; }
-  .river-art { position: relative; height: 320px; }
-
-  /* === Anleger nav strip === */
-  .anleger { background: var(--mist); }
-  .anleger-rail { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); }
-  .anleger-stop { padding: 22px 24px; border-right: 1px solid rgba(10,42,67,0.08); cursor: pointer; transition: background 0.2s; }
-  .anleger-rail .anleger-stop:last-child { border-right: none; }
-  .anleger-stop:hover { background: rgba(10,42,67,0.04); }
-  .anleger-stop .km { font-size: 0.7rem; color: var(--water-light); font-weight: 600; letter-spacing: 0.06em; }
-  .anleger-stop .name { font-family: 'Fraunces', serif; font-size: 1rem; margin-top: 4px; color: var(--deep); }
-
   /* === Section cards === */
   main { max-width: 1180px; margin: 0 auto; padding: 70px 28px; }
   .section-head { margin-bottom: 38px; text-align: center; }
@@ -75,26 +46,62 @@
     border: 1px solid var(--mist); border-radius: 10px; padding: 28px 24px; transition: all 0.2s; display: flex; flex-direction: column; gap: 10px;
   }
   .feature-card:hover { border-color: var(--water-light); box-shadow: 0 16px 40px rgba(10,42,67,0.08); transform: translateY(-2px); }
-  .feature-icon { font-family: 'Fraunces', serif; font-size: 1.6rem; color: var(--gold); }
+  .feature-icon { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.6rem; color: var(--gold); }
   .feature-card h3 { font-size: 1.1rem; color: var(--deep); }
   .feature-card p { font-size: 0.88rem; color: #5c6e79; flex: 1; }
-  .feature-link { font-size: 0.84rem; font-weight: 600; color: var(--water); margin-top: 6px; }
+  .feature-link { font-size: 0.84rem; font-weight: 700; color: var(--water); margin-top: 6px; }
 
   footer { background: var(--deep); color: rgba(255,255,255,0.6); padding: 50px 28px 30px; }
   .footer-inner { max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-  .footer-inner .fname { color: var(--white); font-family: 'Fraunces', serif; font-size: 1.1rem; }
+  .footer-inner .fname { color: var(--white); font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.1rem; }
   .footer-inner span { font-size: 0.85rem; }
 
   @media (max-width: 880px) {
-    .hero-inner { grid-template-columns: 1fr; }
-    .river-art { display: none; }
-    .anleger-rail { grid-template-columns: repeat(2, 1fr); }
     .feature-grid { grid-template-columns: 1fr 1fr; }
-    .hero h1 { font-size: 2.2rem; }
   }
   @media (max-width: 540px) {
     .feature-grid { grid-template-columns: 1fr; }
-    .anleger-rail { grid-template-columns: 1fr; }
+  }
+
+  /* === Kachel-Navigation (ersetzt den Anleger-Streifen) === */
+  .uh-kacheln-wrap { background: #0b1b2e; padding: 32px 0; }
+  .uh-kacheln {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .uh-kachel {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    box-shadow: 0 4px 14px rgba(11, 27, 46, 0.18);
+    text-decoration: none;
+    outline-offset: 4px;
+  }
+  .uh-kachel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+  }
+  .uh-kachel:hover img,
+  .uh-kachel:focus-visible img { transform: scale(1.05); }
+  .uh-kachel:hover,
+  .uh-kachel:focus-visible { box-shadow: 0 10px 24px rgba(11, 27, 46, 0.28); }
+  .uh-kachel:focus-visible { outline: 3px solid #d9762e; }
+  @media (max-width: 860px) {
+    .uh-kacheln { grid-template-columns: repeat(2, 1fr); max-width: 560px; }
+  }
+  @media (max-width: 480px) {
+    .uh-kacheln { grid-template-columns: 1fr; max-width: 360px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .uh-kachel img { transition: none; }
   }
 </style>
 </head>
@@ -102,66 +109,39 @@
 
 <header>
   <div class="nav-wrap">
-    <a href="auf-der-uhlenhorst-home.html" class="logo">Auf der <em>Uhlenhorst</em></a>
-    <nav class="main-nav">
-      <a href="auf-der-uhlenhorst-verzeichnis.html">Geschäfte</a>
-      <a href="auf-der-uhlenhorst-termine.html">Moin Uhlenhorst</a>
-      <a href="auf-der-uhlenhorst-unser-uhlenhorst.html">Unser Uhlenhorst</a>
-      <a href="auf-der-uhlenhorst-forum.html">Forum</a>
-      <a href="auf-der-uhlenhorst-shop.html">Shop</a>
-    </nav>
-    <div class="auth-area" id="authArea">
-      <button class="btn btn-ghost" onclick="window.location.href='auf-der-uhlenhorst-login.html'">Anmelden</button>
+    <a href="auf-der-uhlenhorst-home.html" class="logo">
+      <img src="bilder/logo-schwan-weiss.png" alt="Auf der Uhlenhorst" class="uh-logo-img">
+    </a>
+    <div class="uh-header-actions">
+      <div class="auth-area" id="authArea">
+        <button class="btn btn-gold" onclick="window.location.href='auf-der-uhlenhorst-login.html'">Anmelden</button>
+      </div>
+      <a class="btn btn-gold" href="auf-der-uhlenhorst-shop.html">Warenkorb</a>
     </div>
   </div>
 </header>
 
-<section class="hero">
-  <div class="hero-inner">
-    <div>
-      <div class="eyebrow"><span class="dash"></span>Hamburg · Uhlenhorst, an der Alster</div>
-      <h1>Der Stadtteil,<br>von <em>innen</em><br>erzählt.</h1>
-      <p class="lead">Geschäfte finden, Nachbarn kennenlernen, Termine nicht verpassen. Eine Plattform von und für alle, die auf der Uhlenhorst leben.</p>
-      <div class="hero-ctas">
-        <button class="btn btn-gold btn-lg" onclick="window.location.href='auf-der-uhlenhorst-verzeichnis.html'">Geschäfte entdecken</button>
-        <button class="btn btn-ghost btn-lg" onclick="window.location.href='auf-der-uhlenhorst-forum.html'">Forum besuchen</button>
-      </div>
-    </div>
-    <div class="river-art">
-      <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
-        <path d="M 320 0 C 280 60, 300 110, 240 160 C 180 210, 200 260, 140 310 C 90 350, 80 380, 40 380"
-              fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="46" stroke-linecap="round"/>
-        <path d="M 320 0 C 280 60, 300 110, 240 160 C 180 210, 200 260, 140 310 C 90 350, 80 380, 40 380"
-              fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
-        <circle cx="300" cy="40" r="4" fill="#C9A24B"/>
-        <circle cx="255" cy="145" r="4" fill="#C9A24B"/>
-        <circle cx="175" cy="240" r="4" fill="#C9A24B"/>
-        <circle cx="95" cy="345" r="4" fill="#C9A24B"/>
-        <text x="312" y="36" fill="rgba(255,255,255,0.55)" font-size="11" font-family="Inter">Außenalster</text>
-        <text x="180" y="225" fill="rgba(255,255,255,0.55)" font-size="11" font-family="Inter">Uhlenhorst</text>
-      </svg>
-    </div>
-  </div>
-</section>
-
-<div class="anleger">
-  <div class="anleger-rail">
-    <div class="anleger-stop" onclick="window.location.href='auf-der-uhlenhorst-verzeichnis.html'">
-      <div class="km">01 · Verzeichnis</div><div class="name">Geschäfte &amp; Karte</div>
-    </div>
-    <div class="anleger-stop" onclick="window.location.href='auf-der-uhlenhorst-termine.html'">
-      <div class="km">02 · Gemeinschaft</div><div class="name">Moin Uhlenhorst</div>
-    </div>
-    <div class="anleger-stop" onclick="window.location.href='auf-der-uhlenhorst-forum.html'">
-      <div class="km">03 · Austausch</div><div class="name">Forum</div>
-    </div>
-    <div class="anleger-stop" onclick="window.location.href='auf-der-uhlenhorst-shop.html'">
-      <div class="km">04 · Mitbringen</div><div class="name">Shop</div>
-    </div>
-    <div class="anleger-stop" onclick="window.location.href='auf-der-uhlenhorst-login.html'">
-      <div class="km">05 · Konto</div><div class="name">Anmelden</div>
-    </div>
-  </div>
+<div class="uh-kacheln-wrap">
+  <nav class="uh-kacheln" aria-label="Hauptnavigation">
+    <a class="uh-kachel" href="auf-der-uhlenhorst-home.html">
+      <img src="bilder/kachel-home-schwaene.jpg" alt="Auf der Uhlenhorst ist in – zur Startseite">
+    </a>
+    <a class="uh-kachel" href="auf-der-uhlenhorst-verzeichnis.html">
+      <img src="bilder/kachel-laden-und-leute.jpg" alt="Läden und Leute – zum Mitgliederverzeichnis">
+    </a>
+    <a class="uh-kachel" href="auf-der-uhlenhorst-unser-uhlenhorst.html">
+      <img src="bilder/kachel-einst-und-jetzt.jpg" alt="Einst und Jetzt – zu Unser Uhlenhorst">
+    </a>
+    <a class="uh-kachel" href="auf-der-uhlenhorst-termine.html">
+      <img src="bilder/kachel-was-wann-wo.jpg" alt="Was? Wann? Wo? – zu den Veranstaltungen">
+    </a>
+    <a class="uh-kachel" href="auf-der-uhlenhorst-forum.html">
+      <img src="bilder/kachel-dialog-digital.jpg" alt="Dialog Digital – zum Forum">
+    </a>
+    <a class="uh-kachel" href="auf-der-uhlenhorst-shop.html">
+      <img src="bilder/kachel-dies-und-das.jpg" alt="Dies und Das – zum Shop">
+    </a>
+  </nav>
 </div>
 
 <main>
