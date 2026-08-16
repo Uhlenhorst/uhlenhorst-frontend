@@ -659,12 +659,40 @@
       marker.openPopup();
     }
   }
+function renderBusinessFrieze(items) {
+  const frieze = document.getElementById('businessFrieze');
+  const withPhotos = items.filter(biz => biz.image_url);
 
+  if (withPhotos.length === 0) {
+    frieze.style.display = 'none';
+    return;
+  }
+
+  frieze.innerHTML = '';
+
+  withPhotos.forEach(biz => {
+    const item = document.createElement('div');
+    item.className = 'frieze-item';
+
+    const img = document.createElement('img');
+    img.src = biz.image_url;
+    img.alt = biz.name || 'Geschäft auf der Uhlenhorst';
+    img.loading = 'lazy';
+
+    item.appendChild(img);
+    item.addEventListener('click', event => {
+      openLightbox(event, biz.image_url, biz.name || 'Geschäft');
+    });
+
+    frieze.appendChild(item);
+  });
+}
   async function loadBusinesses() {
     const container = document.getElementById('listContainer');
     try {
       const res = await fetch(`${API_BASE}/businesses`);
       allBusinesses = await res.json();
+      renderBusinessFrieze(allBusinesses);
       buildAzRow();
       renderList(allBusinesses);
       renderMapMarkers(allBusinesses);
