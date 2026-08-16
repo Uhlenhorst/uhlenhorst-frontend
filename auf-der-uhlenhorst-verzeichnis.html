@@ -692,7 +692,7 @@ function renderBusinessFrieze(items) {
     try {
       const res = await fetch(`${API_BASE}/businesses`);
       allBusinesses = await res.json();
-      renderBusinessFrieze(allBusinesses);
+      
       buildAzRow();
       renderList(allBusinesses);
       renderMapMarkers(allBusinesses);
