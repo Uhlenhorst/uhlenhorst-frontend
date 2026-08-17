@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Innen-Bonus | Auf der Uhlenhorst</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b3b68">
+<link rel="stylesheet" href="/schnitzeljagd/assets/style.css">
+</head>
+<body>
+<main class="page"><section class="frame">
+<img class="logo" src="/schnitzeljagd/assets/logo.jpg" alt="Auf der Uhlenhorst">
+<div class="brand">AUF DER UHLENHORST</div>
+<div class="subbrand">BONUSSTATION</div>
+<div class="rule"></div>
+
+<span class="badge">Nur bei Öffnung</span>
+<h1>Beispielgeschäft 2</h1>
+<div class="station-location"><span class="pin">⌖</span><div>Papenhuder Straße, Hamburg-Uhlenhorst</div></div>
+
+<div class="puzzle-card">
+  <div class="puzzle-label">INNEN-BONUS</div>
+  <div class="puzzle-question">Fragt nach dem Bonuscode und gebt ihn online ein.</div>
+  <div class="answers">
+    <input id="bonusAnswer" autocomplete="off" placeholder="Antwort eingeben">
+    <button class="primary" onclick="checkBonus()">Antwort prüfen</button>
+  </div>
+</div>
+
+<div id="bonusFeedback" class="feedback"></div>
+
+<div class="station-note">
+  Bonusstationen sind freiwillig und beeinflussen den Abschluss der Haupt-Schnitzeljagd nicht.
+</div>
+
+<div class="home-links">
+  <a class="btn" href="/schnitzeljagd/bonus/">Alle Bonusstationen</a>
+  <a class="btn" href="/schnitzeljagd/">Zur Schnitzeljagd</a>
+</div>
+
+<div class="footer">ENTDECKEN · MITMACHEN · ZUSAMMENKOMMEN</div>
+</section></main>
+
+<script>
+const BONUS_ID="bonus-002";
+const CORRECT="UHLENHORST";
+function norm(v){return String(v||'').trim().toLocaleLowerCase('de-DE')}
+function checkBonus(){
+  const fb=document.getElementById('bonusFeedback');
+  const val=document.getElementById('bonusAnswer').value;
+  if(norm(val)===norm(CORRECT)){
+    let p={};
+    try{p=JSON.parse(localStorage.getItem('uhlenhorst_bonus_progress')||'{}')}catch(e){}
+    p[BONUS_ID]=true;
+    localStorage.setItem('uhlenhorst_bonus_progress',JSON.stringify(p));
+    fb.className='feedback ok';
+    fb.innerHTML='<strong>Bonus geschafft!</strong><div style="margin-top:6px">1 Bonuspunkt</div>';
+  }else{
+    fb.className='feedback bad';
+    fb.innerHTML='<strong>Noch nicht ganz.</strong> Versucht es noch einmal.';
+  }
+}
+</script>
+</body></html>

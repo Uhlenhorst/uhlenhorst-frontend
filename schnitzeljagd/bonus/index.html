@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bonusstationen | Auf der Uhlenhorst</title>
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0b3b68">
+<link rel="stylesheet" href="/schnitzeljagd/assets/style.css">
+</head>
+<body>
+<main class="page"><section class="frame">
+<img class="logo" src="/schnitzeljagd/assets/logo.jpg" alt="Auf der Uhlenhorst">
+<div class="brand">AUF DER UHLENHORST</div>
+<div class="subbrand">www.ig-uhlenhorst.com</div>
+<div class="rule"></div>
+
+<section class="bonus-hero">
+  <span class="badge">FREIWILLIGE EXTRAS</span>
+  <h1>Bonusstationen</h1>
+  <p>Teilnehmende Geschäfte und Einrichtungen können zusätzliche Aufgaben anbieten. Diese Extras sind freiwillig und niemals nötig, um die eigentliche Schnitzeljagd abzuschließen.</p>
+</section>
+
+<div id="bonusProgress" class="bonus-progress">Noch keine Bonusstation gelöst.</div>
+<div id="bonusGrid" class="bonus-grid"></div>
+
+<div class="partner-info">
+  <h2>Geschäft auf der Uhlenhorst?</h2>
+  <p>Bonusstationen können jederzeit ergänzt, geändert oder pausiert werden. Das Kernspiel und die bestehenden QR-Codes bleiben davon unberührt.</p>
+  <a class="btn" href="/schnitzeljagd/bonus/mitmachen/">Als Bonusstation mitmachen</a>
+</div>
+
+<div class="home-links">
+  <a class="btn" href="/schnitzeljagd/">Zur Schnitzeljagd</a>
+  <a class="btn" href="/auf-der-uhlenhorst-home.html">Zur Hauptseite</a>
+</div>
+
+<div class="footer">ENTDECKEN · MITMACHEN · ZUSAMMENKOMMEN</div>
+</section></main>
+
+<script>
+function readBonusProgress(){
+  try{return JSON.parse(localStorage.getItem('uhlenhorst_bonus_progress')||'{}')}
+  catch(e){return {}}
+}
+function updateBonusProgress(){
+  const p=readBonusProgress();
+  const n=Object.keys(p).length;
+  document.getElementById('bonusProgress').innerHTML = n
+    ? '<strong>'+n+' Bonusstation(en)</strong> auf diesem Gerät gelöst.'
+    : 'Noch keine Bonusstation gelöst.';
+}
+fetch('/schnitzeljagd/assets/bonus-config.json')
+  .then(r=>r.json())
+  .then(data=>{
+    const active=(data.bonuses||[]).filter(x=>x.active);
+    const grid=document.getElementById('bonusGrid');
+    if(!active.length){
+      grid.innerHTML='<div class="bonus-empty"><strong>Aktuell sind keine Bonusstationen aktiviert.</strong><br>Die Kern-Schnitzeljagd ist natürlich vollständig spielbar.</div>';
+      return;
+    }
+    grid.innerHTML=active.map(b=>`
+      <article class="bonus-card">
+        <div class="bonus-top">
+          <div>
+            <div class="bonus-business">${escapeHtml(b.business)}</div>
+            <div class="bonus-place">${escapeHtml(b.place)}</div>
+          </div>
+          <span class="bonus-type">${escapeHtml(b.type)}</span>
+        </div>
+        <div class="bonus-desc"><strong>${escapeHtml(b.title)}</strong><br>${escapeHtml(b.description)}</div>
+        <div class="bonus-meta">
+          <span class="bonus-chip">${escapeHtml(b.availability)}</span>
+          <span class="bonus-chip">${escapeHtml(b.reward)}</span>
+        </div>
+        <div class="bonus-actions">
+          <a class="primary" href="${b.url}">Bonus öffnen</a>
+        </div>
+      </article>
+    `).join('');
+  });
+function escapeHtml(v){
+  return String(v||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+updateBonusProgress();
+</script>
+</body>
+</html>

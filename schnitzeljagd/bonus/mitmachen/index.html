@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bonusstation einreichen | Auf der Uhlenhorst</title>
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0b3b68">
+<link rel="stylesheet" href="/schnitzeljagd/assets/style.css">
+</head>
+<body>
+<main class="page"><section class="frame">
+<img class="logo" src="/schnitzeljagd/assets/logo.jpg" alt="Auf der Uhlenhorst">
+<div class="brand">AUF DER UHLENHORST</div>
+<div class="subbrand">BONUSSTATION EINREICHEN</div>
+<div class="rule"></div>
+
+<span class="badge">FÜR GESCHÄFTE & EINRICHTUNGEN</span>
+<h1>Eigene Bonusstation vorschlagen</h1>
+<p>Mit diesem Formular könnt ihr eine freiwillige Zusatzaufgabe für die dauerhafte Uhlenhorst-Schnitzeljagd vorschlagen. Die Einreichung wird zunächst geprüft und nicht automatisch veröffentlicht.</p>
+
+
+<div class="card">
+  <strong>Hinweis:</strong> Diese Render-Version veröffentlicht keine Einreichung automatisch.
+  Der Vorschlag wird zuerst zum Kopieren vorbereitet und anschließend von der
+  Interessengemeinschaft geprüft.
+</div>
+<form id="bonusForm" novalidate>
+  <div class="honeypot">
+    <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+  </div>
+
+  <div class="form-section">
+    <h2>1. Geschäft / Einrichtung</h2>
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="business">Geschäftsname *</label>
+        <input id="business" name="business" required maxlength="120">
+      </div>
+      <div class="form-field">
+        <label for="contact_name">Ansprechpartner *</label>
+        <input id="contact_name" name="contact_name" required maxlength="120">
+      </div>
+      <div class="form-field">
+        <label for="email">E-Mail *</label>
+        <input id="email" name="email" type="email" required maxlength="160">
+      </div>
+      <div class="form-field">
+        <label for="phone">Telefon</label>
+        <input id="phone" name="phone" type="tel" maxlength="80">
+      </div>
+      <div class="form-field wide">
+        <label for="place">Adresse / Standort *</label>
+        <input id="place" name="place" required maxlength="180" placeholder="z. B. Hofweg 00, 22085 Hamburg">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>2. Die Bonusaufgabe</h2>
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="title">Titel der Station *</label>
+        <input id="title" name="title" required maxlength="100" placeholder="z. B. Der Schaufenster-Code">
+      </div>
+
+      <div class="form-field">
+        <label for="type">Art der Station *</label>
+        <select id="type" name="type" required>
+          <option value="">Bitte auswählen</option>
+          <option>Außen lösbar – jederzeit</option>
+          <option>Im Geschäft – nur bei Öffnung</option>
+          <option>Beides möglich</option>
+        </select>
+      </div>
+
+      <div class="form-field wide">
+        <label for="description">Kurze Beschreibung *</label>
+        <textarea id="description" name="description" required maxlength="700" placeholder="Was sollen die Teilnehmer sehen oder erleben?"></textarea>
+      </div>
+
+      <div class="form-field wide">
+        <label for="task">Konkrete Aufgabe / Frage *</label>
+        <textarea id="task" name="task" required maxlength="600" placeholder="z. B. Welches maritime Symbol ist im Schaufenster versteckt?"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label for="answer">Richtige Lösung *</label>
+        <input id="answer" name="answer" required maxlength="150">
+        <div class="form-help">Die Lösung wird nicht öffentlich in der Übersicht gezeigt.</div>
+      </div>
+
+      <div class="form-field">
+        <label for="availability">Verfügbarkeit *</label>
+        <select id="availability" name="availability" required>
+          <option value="">Bitte auswählen</option>
+          <option>Jederzeit</option>
+          <option>Nur während der Öffnungszeiten</option>
+          <option>Nach Absprache</option>
+        </select>
+      </div>
+
+      <div class="form-field wide">
+        <label for="reward">Optionale Belohnung</label>
+        <input id="reward" name="reward" maxlength="180" placeholder="z. B. 1 Bonuspunkt, Aufkleber, kleine Überraschung">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>3. Zustimmung</h2>
+    <label class="form-check">
+      <input type="checkbox" name="consent" value="yes" required>
+      <span>Ich bin damit einverstanden, dass die eingegebenen Kontaktdaten zur Prüfung und Abstimmung der vorgeschlagenen Bonusstation verwendet werden. *</span>
+    </label>
+    <div class="form-help" style="margin-top:8px">Die Bonusstation wird erst nach Prüfung und Freigabe veröffentlicht.</div>
+  </div>
+
+  <button class="primary" type="submit">Vorschlag zum Versenden vorbereiten</button>
+  <button type="button" style="margin-top:10px" onclick="previewSubmission()">Vorschau anzeigen</button>
+
+  <div id="formStatus" class="form-status"></div>
+  <div id="formPreview" class="form-preview"><strong>Vorschau</strong><pre id="previewText"></pre></div>
+</form>
+
+<div class="home-links">
+  <a class="btn" href="/schnitzeljagd/bonus/">Zur Bonusübersicht</a>
+  <a class="btn" href="/schnitzeljagd/">Zur Schnitzeljagd</a>
+</div>
+
+<div class="footer">ENTDECKEN · MITMACHEN · ZUSAMMENKOMMEN</div>
+</section></main>
+
+<script>
+const form=document.getElementById('bonusForm');
+const statusBox=document.getElementById('formStatus');
+
+function val(name){
+  const el=form.elements[name];
+  return el ? String(el.value||'').trim() : '';
+}
+function submissionText(){
+  return [
+    'BONUSSTATION – AUF DER UHLENHORST',
+    '',
+    'Geschäft: '+val('business'),
+    'Ansprechpartner: '+val('contact_name'),
+    'E-Mail: '+val('email'),
+    'Telefon: '+val('phone'),
+    'Adresse: '+val('place'),
+    '',
+    'Titel: '+val('title'),
+    'Art: '+val('type'),
+    'Verfügbarkeit: '+val('availability'),
+    '',
+    'Beschreibung:',
+    val('description'),
+    '',
+    'Aufgabe:',
+    val('task'),
+    '',
+    'Lösung: '+val('answer'),
+    'Belohnung: '+val('reward')
+  ].join('\n');
+}
+function previewSubmission(){
+  document.getElementById('previewText').textContent=submissionText();
+  document.getElementById('formPreview').style.display='block';
+}
+form.addEventListener('submit', async function(e){
+  e.preventDefault();
+  statusBox.className='form-status';
+  statusBox.textContent='';
+
+  if(!form.checkValidity()){
+    statusBox.className='form-status bad';
+    statusBox.textContent='Bitte füllt alle Pflichtfelder aus.';
+    form.reportValidity();
+    return;
+  }
+
+  const txt=submissionText();
+  try{
+    await navigator.clipboard.writeText(txt);
+    statusBox.className='form-status ok';
+    statusBox.innerHTML='<strong>Vorschlag vorbereitet.</strong><br>Alle Angaben wurden in die Zwischenablage kopiert. Ihr könnt sie jetzt per E-Mail an die Interessengemeinschaft schicken.';
+  }catch(err){
+    statusBox.className='form-status ok';
+    statusBox.innerHTML='<strong>Vorschlag vorbereitet.</strong><br>Die Angaben stehen unten in der Vorschau und können kopiert werden.';
+    previewSubmission();
+  }
+});
+</script>
+</body>
+</html>

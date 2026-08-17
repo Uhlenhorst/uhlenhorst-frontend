@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ziel | Auf der Uhlenhorst</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b3b68">
+<meta name="description" content="Finale der dauerhaften Auf der Uhlenhorst Schnitzeljagd.">
+<link rel="stylesheet" href="/schnitzeljagd/assets/style.css">
+</head>
+<body>
+<main class="page"><section class="frame">
+<img class="logo" src="/schnitzeljagd/assets/logo.jpg" alt="Auf der Uhlenhorst">
+<div class="brand">AUF DER UHLENHORST</div>
+<div class="subbrand">www.ig-uhlenhorst.com</div>
+<div class="rule"></div>
+
+<span class="badge">FINALE</span>
+<h1>Jetzt den Geheimcode knacken</h1>
+<p>Ihr habt eure Fundstücke gesammelt. Bringt sie in die richtige Reihenfolge und gebt das Lösungswort ein.</p>
+<div id="progressStatus" class="complete-status"></div>
+
+<div class="card">
+  <input id="solution" autocomplete="off" placeholder="Lösungswort">
+  <button class="primary" id="checkButton" style="margin-top:10px" onclick="checkFinal()">Lösung prüfen</button>
+  <div id="finalFeedback" class="feedback"></div>
+</div>
+
+<div id="successStage" class="success-stage">
+  <div id="confetti" class="confetti-layer"></div>
+  <div class="big-success">GESCHAFFT!</div>
+  <div class="success-sub">Ihr habt die Uhlenhorst-Rallye erfolgreich beendet.</div>
+
+  <div class="card certificate-wrap">
+    <h2>Digitale Urkunde</h2>
+    <p>Tragt euren Namen oder Teamnamen ein. Danach könnt ihr die Urkunde drucken oder als PDF speichern.</p>
+    <input id="certNameInput" autocomplete="off" placeholder="Name oder Teamname">
+    <button class="primary" style="margin-top:10px" onclick="updateCertificate()">Urkunde erstellen</button>
+  </div>
+
+  <div id="certificate" class="certificate">
+    <img class="cert-logo" src="/schnitzeljagd/assets/logo.jpg" alt="">
+    <div class="cert-sub">AUF DER UHLENHORST</div>
+    <div class="cert-title">URKUNDE</div>
+    <div id="certType" class="cert-sub">UHLENHORST-ENTDECKER</div>
+    <div id="certName" class="cert-name">________________________</div>
+    <div id="certText" class="cert-text">hat die Schnitzeljagd erfolgreich abgeschlossen.</div>
+    <div class="cert-code">UHLENHORST</div>
+    <div class="cert-text">Entdecken · Mitmachen · Zusammenkommen</div>
+    <div class="cert-sub" style="margin-top:18px">www.ig-uhlenhorst.com</div>
+  </div>
+
+  <div class="utility" style="margin-top:14px">
+    <button class="primary" onclick="window.print()">Urkunde drucken / als PDF speichern</button>
+    <button onclick="shareSuccess()">Erfolg teilen</button>
+  </div>
+  <div id="shareFeedback" class="share-note"></div>
+
+  <div class="utility">
+    <a class="btn" href="/schnitzeljagd/">Zur Schnitzeljagd-Startseite</a>
+    <button onclick="restartTour()">Rallye neu starten</button>
+  </div>
+</div>
+
+<div class="footer">ENTDECKEN · MITMACHEN · ZUSAMMENKOMMEN</div>
+</section></main>
+
+<script>
+const params = new URLSearchParams(location.search);
+const group = params.get('gruppe') === 'erwachsene' ? 'erwachsene' : 'kinder';
+const total = group === 'erwachsene' ? 10 : 8;
+const progressKey = 'uhlenhorst_progress_' + group;
+
+function readProgress(){
+  try { return JSON.parse(localStorage.getItem(progressKey) || '{}'); }
+  catch(e){ return {}; }
+}
+function solvedCount(){ return Object.keys(readProgress()).length; }
+function updateProgressStatus(){
+  const n = solvedCount();
+  const status = document.getElementById('progressStatus');
+  if(n >= total){
+    status.innerHTML = '<strong>Alle '+total+' Stationen gelöst.</strong> Jetzt könnt ihr den Geheimcode eingeben.';
+    document.getElementById('solution').disabled = false;
+    document.getElementById('checkButton').disabled = false;
+  } else {
+    status.innerHTML = '<strong>'+n+' von '+total+' Stationen gespeichert.</strong> Für den offiziellen Abschluss fehlen noch '+(total-n)+' Station(en).';
+    document.getElementById('solution').disabled = true;
+    document.getElementById('checkButton').disabled = true;
+  }
+}
+function confetti(){
+  const layer = document.getElementById('confetti');
+  layer.innerHTML = '';
+  for(let i=0;i<46;i++){
+    const el = document.createElement('span');
+    el.className = 'confetti-piece' + (i%2 ? ' alt' : '');
+    el.style.left = (Math.random()*100)+'%';
+    el.style.animationDelay = (Math.random()*0.8)+'s';
+    el.style.transform = 'rotate('+(Math.random()*180)+'deg)';
+    layer.appendChild(el);
+  }
+}
+function checkFinal(){
+  const fb = document.getElementById('finalFeedback');
+  const v = (document.getElementById('solution').value || '').trim().toUpperCase();
+  if(v === 'UHLENHORST'){
+    fb.className = 'feedback ok';
+    fb.innerHTML = '<strong>Richtig!</strong> Der Geheimcode lautet UHLENHORST.';
+    const stage = document.getElementById('successStage');
+    stage.classList.add('show');
+    document.getElementById('certType').textContent = group === 'erwachsene' ? 'UHLENHORST-KENNER' : 'UHLENHORST-ENTDECKER';
+    document.getElementById('certText').textContent = group === 'erwachsene'
+      ? 'hat „Geheimcode Uhlenhorst“ erfolgreich gelöst.'
+      : 'hat die Kinder-Schnitzeljagd erfolgreich gemeistert.';
+    confetti();
+    stage.scrollIntoView({behavior:'smooth',block:'start'});
+  } else {
+    fb.className = 'feedback bad';
+    fb.innerHTML = '<strong>Noch nicht.</strong> Ordnet eure Fundstücke noch einmal neu.';
+  }
+}
+function updateCertificate(){
+  const name = (document.getElementById('certNameInput').value || '').trim();
+  document.getElementById('certName').textContent = name || '________________________';
+}
+async function shareSuccess(){
+  const who = (document.getElementById('certNameInput').value || '').trim();
+  const text = (who ? who+' hat ' : 'Wir haben ') + 'die Schnitzeljagd „Auf der Uhlenhorst“ geschafft! 🦢';
+  const shareData = {
+    title:'Auf der Uhlenhorst – Schnitzeljagd geschafft',
+    text:text,
+    url:'https://www.ig-uhlenhorst.com/schnitzeljagd/'
+  };
+  const fb = document.getElementById('shareFeedback');
+  try{
+    if(navigator.share){
+      await navigator.share(shareData);
+      fb.textContent = 'Teilen-Dialog geöffnet.';
+    } else {
+      await navigator.clipboard.writeText(text+' https://www.ig-uhlenhorst.com/schnitzeljagd/');
+      fb.textContent = 'Text und Link wurden in die Zwischenablage kopiert.';
+    }
+  }catch(e){
+    fb.textContent = 'Teilen wurde abgebrochen.';
+  }
+}
+function restartTour(){
+  if(confirm('Fortschritt dieser Rallye löschen und neu starten?')){
+    localStorage.removeItem(progressKey);
+    location.href = '/schnitzeljagd/'+group+'/';
+  }
+}
+updateProgressStatus();
+</script>
+</body></html>

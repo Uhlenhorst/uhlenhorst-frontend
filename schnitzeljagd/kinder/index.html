@@ -1,0 +1,73 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kinder-Schnitzeljagd | Auf der Uhlenhorst</title><link rel="stylesheet" href="/schnitzeljagd/assets/style.css"></head><body><main class="page"><section class="frame"><img class="logo" src="/schnitzeljagd/assets/logo.jpg" alt="Auf der Uhlenhorst"><div class="brand">AUF DER UHLENHORST</div><div class="subbrand">www.ig-uhlenhorst.com</div><div class="rule"></div>
+<section class="tour-hero">
+  <div class="emoji">🦢</div>
+  <span class="badge">JEDERZEIT SPIELBAR</span>
+  <h1>Kinder-Schnitzeljagd</h1>
+  <p>Eine spielerische Entdeckertour durch die Uhlenhorst mit acht Stationen, kleinen Beobachtungsaufgaben und versteckten Fundstücken.</p>
+</section>
+
+<div class="tour-summary">
+  <div class="summary-box"><strong>8</strong>Stationen</div>
+  <div class="summary-box"><strong>60–90 Min.</strong>ungefähre Dauer</div>
+  <div class="summary-box"><strong>Familien &amp; Kinder</strong>geeignet für</div>
+</div>
+
+<div id="tourProgress" class="tour-progress">
+  <strong>Dein Fortschritt auf diesem Gerät</strong>
+  <div class="tour-progress-line"><div id="tourBar" style="width:0%"></div></div>
+  <div id="tourProgressText">Noch keine Station gelöst.</div>
+</div>
+
+<div class="tour-actions">
+  <a id="mainTourButton" class="btn primary wide" href="/schnitzeljagd/kinder/1/">Tour starten</a>
+  <a class="btn" href="/schnitzeljagd/kinder/route/">Route ansehen</a>
+  <a class="btn" href="/schnitzeljagd/kinder/fundstuecke/">Meine Fundstücke</a>
+</div>
+
+<div class="route-preview">
+  <div class="route-preview-head">Eure Route – ohne Rätselspoiler</div>
+  <div class="route-preview-body">
+    <div class="preview-stop"><div class="preview-dot">1</div><div class="preview-name">Averhoffstraße</div></div><div class="preview-stop"><div class="preview-dot">2</div><div class="preview-name">Hofweg</div></div><div class="preview-stop"><div class="preview-dot">3</div><div class="preview-name">Feenteich</div></div><div class="preview-stop"><div class="preview-dot">4</div><div class="preview-name">Schöne Aussicht</div></div><div class="preview-stop"><div class="preview-dot">5</div><div class="preview-name">Literaturhaus</div></div><div class="preview-stop"><div class="preview-dot">6</div><div class="preview-name">Kuhmühlenteich</div></div><div class="preview-stop"><div class="preview-dot">7</div><div class="preview-name">St. Gertrud</div></div><div class="preview-stop"><div class="preview-dot">8</div><div class="preview-name">Luthereiche</div></div>
+  </div>
+</div>
+
+<h2>Was euch erwartet</h2>
+<div class="rules-mini">
+  <div class="rule-mini"><div class="r">1</div><div>Ihr geht von Station zu Station und löst jeweils eine kurze Aufgabe direkt am Ort.</div></div>
+  <div class="rule-mini"><div class="r">2</div><div>Nur nach einer richtigen Lösung wird das jeweilige Fundstück freigegeben.</div></div>
+  <div class="rule-mini"><div class="r">3</div><div>Die Fundstücke sind absichtlich gemischt. Erst am Ende entsteht das Lösungswort.</div></div>
+  <div class="rule-mini"><div class="r">✓</div><div>Nach erfolgreichem Abschluss erhaltet ihr die digitale Auszeichnung <strong>UHLENHORST-ENTDECKER</strong>.</div></div>
+</div>
+
+<div class="no-spoiler">
+  Diese Seite zeigt bewusst keine Fragen oder Lösungen. So könnt ihr euch die Route vorher ansehen, ohne euch das Spiel zu verderben.
+</div>
+
+<div class="home-links">
+  <a class="btn" href="/schnitzeljagd/">Zur Schnitzeljagd-Übersicht</a>
+  <a class="btn" href="/auf-der-uhlenhorst-home.html">Zur Hauptseite</a>
+</div>
+
+<script>
+(function(){
+  const group="kinder";
+  const total=8;
+  const key='uhlenhorst_progress_'+group;
+  let data={};
+  try{ data=JSON.parse(localStorage.getItem(key)||'{}'); }catch(e){}
+  const solved=Object.keys(data).length;
+  const pct=Math.round((solved/total)*100);
+  document.getElementById('tourBar').style.width=pct+'%';
+  const text=document.getElementById('tourProgressText');
+  const btn=document.getElementById('mainTourButton');
+  if(solved>0){
+    text.innerHTML='<strong>'+solved+' von '+total+' Stationen</strong> sind bereits gespeichert.';
+    btn.textContent='Tour fortsetzen';
+    let next=1;
+    while(data[next] && next<=total) next++;
+    if(next<=total) btn.href='/schnitzeljagd/'+group+'/'+next+'/';
+    else btn.href='/schnitzeljagd/ziel/?gruppe='+group;
+  }
+})();
+</script>
+<div style="margin-top:12px"><a class="btn" href="/schnitzeljagd/bonus/">Freiwillige Bonusstationen entdecken</a></div><div class="footer">ENTDECKEN · MITMACHEN · ZUSAMMENKOMMEN</div></section></main><script src="/schnitzeljagd/assets/permanent.js"></script></body></html>

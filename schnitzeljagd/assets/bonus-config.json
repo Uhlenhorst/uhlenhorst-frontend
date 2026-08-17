@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "note": "Bonusstationen sind freiwillig und niemals Voraussetzung für das Kernspiel.",
+  "bonuses": [
+    {
+      "id": "bonus-001",
+      "active": false,
+      "business": "Beispielgeschäft 1",
+      "title": "Schaufenster-Bonus",
+      "place": "Hofweg, Hamburg-Uhlenhorst",
+      "type": "Außen lösbar",
+      "availability": "jederzeit",
+      "description": "Eine kleine Beobachtungsaufgabe am Schaufenster. Diese Vorlage wird später durch ein echtes Partnergeschäft ersetzt.",
+      "task": "Welches maritime Symbol ist im Schaufenster versteckt?",
+      "answer": "Anker",
+      "reward": "1 Bonuspunkt",
+      "url": "/schnitzeljagd/bonus/bonus-001/"
+    },
+    {
+      "id": "bonus-002",
+      "active": false,
+      "business": "Beispielgeschäft 2",
+      "title": "Innen-Bonus",
+      "place": "Papenhuder Straße, Hamburg-Uhlenhorst",
+      "type": "Nur bei Öffnung",
+      "availability": "während der Öffnungszeiten",
+      "description": "Eine freiwillige Aufgabe im Geschäft. Diese Vorlage wird später durch ein echtes Partnergeschäft ersetzt.",
+      "task": "Fragt nach dem Bonuscode und gebt ihn online ein.",
+      "answer": "UHLENHORST",
+      "reward": "1 Bonuspunkt",
+      "url": "/schnitzeljagd/bonus/bonus-002/"
+    }
+  ]
+}
