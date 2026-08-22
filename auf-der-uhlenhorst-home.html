@@ -86,7 +86,7 @@
   position: relative;
 }
   .uh-teaser-badge {
-  
+  animation: kronkorkenWackeln 2.8s ease-in-out infinite;
     flex-direction: column;
 justify-content: space-evenly;
   position: absolute;
@@ -134,6 +134,26 @@ justify-content: space-evenly;
 }
 .uh-teaser-badge:hover {
   transform: rotate(-8deg) scale(1.08);
+}
+  @keyframes kronkorkenWackeln {
+  0%, 70%, 100% {
+    rotate: 0deg;
+  }
+  75% {
+    rotate: -8deg;
+  }
+  80% {
+    rotate: 8deg;
+  }
+  85% {
+    rotate: -6deg;
+  }
+  90% {
+    rotate: 5deg;
+  }
+  95% {
+    rotate: -3deg;
+  }
 }
   .uh-kachel img {
     width: 100%;
