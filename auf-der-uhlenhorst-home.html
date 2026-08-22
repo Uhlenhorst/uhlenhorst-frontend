@@ -86,6 +86,9 @@
   position: relative;
 }
   .uh-teaser-badge {
+  
+    flex-direction: column;
+justify-content: space-evenly;
   position: absolute;
   top: -24px;
   left: -100px;
@@ -115,7 +118,17 @@
   );
   box-shadow: 0 5px 14px rgba(0,0,0,0.25);
 }
+.badge-neu {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
 
+.badge-jagd {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
 .uh-teaser-badge:hover {
   transform: rotate(-8deg) scale(1.08);
 }
