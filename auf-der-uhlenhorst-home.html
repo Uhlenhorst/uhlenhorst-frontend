@@ -82,6 +82,43 @@
     text-decoration: none;
     outline-offset: 4px;
   }
+  .uh-kachel-home-wrap {
+  position: relative;
+}
+  .uh-teaser-badge {
+  position: absolute;
+  top: -24px;
+  left: -24px;
+  width: 110px;
+  height: 110px;
+  background: var(--gold);
+  color: var(--deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-decoration: none;
+  z-index: 10;
+  transform: rotate(-8deg);
+  clip-path: polygon(
+    50% 0%, 59% 9%, 71% 3%, 77% 16%,
+    91% 13%, 91% 28%, 100% 36%, 91% 47%,
+    97% 59%, 84% 66%, 87% 80%, 72% 82%,
+    64% 94%, 52% 87%, 41% 100%, 33% 87%,
+    19% 91%, 17% 76%, 3% 70%, 10% 57%,
+    0% 47%, 11% 37%, 5% 24%, 20% 19%,
+    25% 5%, 39% 11%
+  );
+  box-shadow: 0 5px 14px rgba(0,0,0,0.25);
+}
+
+.uh-teaser-badge:hover {
+  transform: rotate(-8deg) scale(1.08);
+}
   .uh-kachel img {
     width: 100%;
     height: 100%;
@@ -123,9 +160,11 @@
 
 <div class="uh-kacheln-wrap">
   <nav class="uh-kacheln" aria-label="Hauptnavigation">
+    <div class="uh-kachel-home-wrap">
     <a class="uh-kachel" href="auf-der-uhlenhorst-home.html">
       <img src="kachel-home-schwaene.jpg" alt="Auf der Uhlenhorst ist in – zur Startseite">
-    </a>
+    </a><a class="uh-teaser-badge" href="schnitzeljagd/index.html">Schnitzeljagd</a>
+      </div>
     <a class="uh-kachel" href="auf-der-uhlenhorst-verzeichnis.html">
       <img src="kachel-laden-und-leute.jpg" alt="Läden und Leute – zum Mitgliederverzeichnis">
     </a>
