@@ -307,6 +307,42 @@ justify-content: space-evenly;
     window.location.reload();
   }
 </script>
+<audio id="homeJingle" preload="auto">
+  <source src="auf-der-uhlenhorst-hymne_jingel_kurz.mp3" type="audio/mpeg">
+</audio>
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const jingle = document.getElementById('homeJingle');
+  const logo = document.querySelector('.uh-logo-img');
 
+  if (!jingle) return;
+
+  function playJingle() {
+    jingle.currentTime = 0;
+    return jingle.play();
+  }
+
+  // Beim Öffnen der Home-Seite einmal versuchen abzuspielen
+  playJingle().catch(function () {
+    // Falls der Browser Autoplay mit Ton blockiert:
+    // beim ersten Tippen/Klicken einmal starten
+    document.addEventListener('pointerdown', function () {
+      playJingle().catch(function () {});
+    }, { once: true });
+  });
+
+  // Klick auf das Schwanenlogo spielt den Jingle erneut
+  if (logo) {
+    const logoLink = logo.closest('a');
+
+    if (logoLink) {
+      logoLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        playJingle().catch(function () {});
+      });
+    }
+  }
+});
+</script>
 </body>
 </html>
