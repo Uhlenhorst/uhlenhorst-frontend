@@ -129,6 +129,25 @@
         padding: 28px 18px;
       }
     }
+    .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-btn {
+  background: var(--gold);
+  color: var(--deep);
+  padding: 9px 15px;
+  border-radius: 7px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.header-btn:hover {
+  background: #d9b566;
+}
   </style>
 </head>
 
@@ -140,7 +159,18 @@
       <img src="logo-schwan-weiss.png" alt="Auf der Uhlenhorst">
     </a>
 
-    <div class="hymn-label">♫ Hymne</div>
+    <nav class="main-nav" style="display:flex; gap:24px; align-items:center;">
+  <a href="auf-der-uhlenhorst-verzeichnis.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500; text-decoration:none;">Geschäfte</a>
+  <a href="auf-der-uhlenhorst-termine.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500; text-decoration:none;">Moin Uhlenhorst</a>
+  <a href="auf-der-uhlenhorst-unser-uhlenhorst.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500; text-decoration:none;">Unser Uhlenhorst</a>
+  <a href="auf-der-uhlenhorst-forum.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500; text-decoration:none;">Forum</a>
+  <a href="auf-der-uhlenhorst-shop.html" style="color:rgba(255,255,255,0.75); font-size:0.88rem; font-weight:500; text-decoration:none;">Shop</a>
+  <a href="auf-der-uhlenhorst-hymne.html" style="color:var(--gold); font-size:0.88rem; font-weight:600; text-decoration:none;">♫ Hymne</a>
+</nav>
+    <div class="header-actions">
+  <a class="header-btn" href="auf-der-uhlenhorst-login.html">Anmelden</a>
+  <a class="header-btn" href="auf-der-uhlenhorst-shop.html">Warenkorb</a>
+</div>
   </div>
 </header>
 
