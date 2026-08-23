@@ -35,12 +35,20 @@
   .btn { padding: 9px 18px; border-radius: 5px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
   .btn-gold { background: var(--gold); color: var(--deep); }
   .btn-gold:hover { background: #d9b566; }
-  .btn-ghost { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
-  .btn-ghost:hover { border-color: var(--white); }
+  .btn-ghost {
+  background: var(--gold);
+  color: var(--deep);
+  border: 1px solid var(--gold);
+}
+
+.btn-ghost:hover {
+  background: #d9b566;
+  border-color: #d9b566;
+}
   .user-pill { color: rgba(255,255,255,0.85); font-size: 0.85rem; }
   .cart-btn {
-    position: relative; background: transparent; border: 1px solid rgba(255,255,255,0.3);
-    color: var(--white); border-radius: 5px; padding: 9px 16px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    position: relative; background: var(--gold); border: 1px solid var(--gold);
+    color: var(--deep); border-radius: 5px; padding: 9px 16px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
   }
   .cart-btn:hover { border-color: var(--white); }
   .cart-badge {
