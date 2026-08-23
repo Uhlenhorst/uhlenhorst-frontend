@@ -322,14 +322,17 @@ document.addEventListener('DOMContentLoaded', function () {
     return jingle.play();
   }
 
-  // Beim Öffnen der Home-Seite einmal versuchen abzuspielen
+  // Auf Desktop beim Öffnen automatisch abspielen.
+// Auf Mobilgeräten bleibt die Seite beim Öffnen stumm.
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+if (!isMobile) {
   playJingle().catch(function () {
-    // Falls der Browser Autoplay mit Ton blockiert:
-    // beim ersten Tippen/Klicken einmal starten
     document.addEventListener('pointerdown', function () {
       playJingle().catch(function () {});
     }, { once: true });
   });
+}
 
   // Klick auf das Schwanenlogo spielt den Jingle erneut
   if (logo) {
