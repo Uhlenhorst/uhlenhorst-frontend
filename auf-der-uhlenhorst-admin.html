@@ -1221,6 +1221,12 @@ async function loadForumAdmin() {
   onclick="editForumPost('${post.id}', '${threadId}')">
   Bearbeiten
 </button>
+<button
+  class="btn"
+  style="margin-right:8px;"
+  onclick="toggleForumVisibility('${post.id}', '${threadId}', true)">
+  Ausblenden
+</button>
         <button
           class="btn"
           onclick="deleteForumPost('${post.id}', '${threadId}')">
@@ -1290,6 +1296,32 @@ async function editForumPost(postId, threadId) {
 
   } catch (err) {
     showToast(err.message || 'Beitrag konnte nicht geändert werden.', true);
+  }
+}
+  async function toggleForumVisibility(postId, threadId, hidden) {
+  try {
+    const res = await fetch(`${API_BASE}/forum/posts/${postId}/visibility`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        is_hidden: hidden
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Ausblenden fehlgeschlagen.');
+    }
+
+    showToast('Beitrag ausgeblendet.');
+    loadForumThread(threadId);
+
+  } catch (err) {
+    showToast(err.message || 'Beitrag konnte nicht ausgeblendet werden.', true);
   }
 }
   // On load: check if already logged in as admin
