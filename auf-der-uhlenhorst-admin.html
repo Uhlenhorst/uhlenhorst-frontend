@@ -1228,8 +1228,8 @@ async function loadForumAdmin() {
 <button
   class="btn"
   style="margin-right:8px;"
-  onclick="toggleForumVisibility('${post.id}', '${threadId}', true)">
-  Ausblenden
+  onclick="toggleForumVisibility('${post.id}', '${threadId}', ${post.is_hidden ? 'false' : 'true'})">
+  ${post.is_hidden ? 'Einblenden' : 'Ausblenden'}
 </button>
         <button
           class="btn"
