@@ -1190,7 +1190,7 @@ async function loadForumAdmin() {
   container.innerHTML = '<div class="loading-row">Lädt Beiträge …</div>';
 
   try {
-    const res = await fetch(`${API_BASE}/forum/threads/${threadId}`);
+    const res = await fetch(`${API_BASE}/forum/threads/${threadId}/posts-admin`);
     const data = await res.json();
 
     if (!res.ok) {
