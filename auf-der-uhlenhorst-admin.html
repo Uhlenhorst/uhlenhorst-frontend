@@ -1215,7 +1215,12 @@ async function loadForumAdmin() {
         <div style="margin-bottom:10px;">
           ${escapeHtml(post.body || '')}
         </div>
-
+<button
+  class="btn"
+  style="margin-right:8px;"
+  onclick="editForumPost('${post.id}', '${threadId}')">
+  Bearbeiten
+</button>
         <button
           class="btn"
           onclick="deleteForumPost('${post.id}', '${threadId}')">
@@ -1249,6 +1254,42 @@ async function loadForumAdmin() {
 
   } catch (err) {
     showToast('Beitrag konnte nicht gelöscht werden.', true);
+  }
+}
+
+async function editForumPost(postId, threadId) {
+  const neuerText = prompt('Neuen Beitragstext eingeben:');
+
+  if (neuerText === null) return;
+
+  if (!neuerText.trim()) {
+    alert('Der Beitrag darf nicht leer sein.');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/forum/posts/${postId}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        body: neuerText.trim()
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Bearbeiten fehlgeschlagen.');
+    }
+
+    showToast('Beitrag geändert.');
+    loadForumThread(threadId);
+
+  } catch (err) {
+    showToast(err.message || 'Beitrag konnte nicht geändert werden.', true);
   }
 }
   // On load: check if already logged in as admin
