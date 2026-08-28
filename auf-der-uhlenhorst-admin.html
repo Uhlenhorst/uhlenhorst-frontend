@@ -1159,18 +1159,96 @@ async function loadForumAdmin() {
     }
 
     container.innerHTML = threads.map(thread => `
-      <div class="panel-card" style="margin-bottom:14px;">
-        <strong>${escapeHtml(thread.title || 'Ohne Titel')}</strong>
-        <div style="font-size:0.85rem; color:#5c6e79; margin-top:6px;">
-          ${escapeHtml(thread.author_name || 'Unbekannt')}
-          ${thread.category_name ? ' · ' + escapeHtml(thread.category_name) : ''}
+  <div class="panel-card" style="margin-bottom:14px;">
+    <strong>${escapeHtml(thread.title || 'Ohne Titel')}</strong>
+
+    <div style="font-size:0.85rem; color:#5c6e79; margin-top:6px;">
+      Verfasser: ${escapeHtml(thread.author_name || 'Unbekannt')}
+      ${thread.category_name ? ' · ' + escapeHtml(thread.category_name) : ''}
+    </div>
+
+    <button
+      class="btn"
+      style="margin-top:12px;"
+      onclick="loadForumThread('${thread.id}')">
+      Beiträge anzeigen
+    </button>
+
+    <div id="forum-thread-${thread.id}" style="margin-top:12px;"></div>
+  </div>
+`).join('');
+
+  } catch (err) {
+    container.innerHTML =
+      '<div class="loading-row">Forum konnte nicht geladen werden.</div>';
+  }
+}
+  async function loadForumThread(threadId) {
+  const container = document.getElementById(`forum-thread-${threadId}`);
+  if (!container) return;
+
+  container.innerHTML = '<div class="loading-row">Lädt Beiträge …</div>';
+
+  try {
+    const res = await fetch(`${API_BASE}/forum/threads/${threadId}`);
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error('Beiträge konnten nicht geladen werden.');
+    }
+
+    const posts = data.posts || [];
+
+    if (!posts.length) {
+      container.innerHTML =
+        '<div class="loading-row">Keine Beiträge in diesem Thema.</div>';
+      return;
+    }
+
+    container.innerHTML = posts.map(post => `
+      <div style="border-top:1px solid #d7dee3; padding:14px 0;">
+        <div style="font-size:0.85rem; color:#5c6e79; margin-bottom:8px;">
+          <strong>${escapeHtml(post.author_name || 'Unbekannt')}</strong>
+          · ${post.created_at ? new Date(post.created_at).toLocaleString('de-DE') : ''}
         </div>
+
+        <div style="margin-bottom:10px;">
+          ${escapeHtml(post.body || '')}
+        </div>
+
+        <button
+          class="btn"
+          onclick="deleteForumPost('${post.id}', '${threadId}')">
+          Löschen
+        </button>
       </div>
     `).join('');
 
   } catch (err) {
     container.innerHTML =
-      '<div class="loading-row">Forum konnte nicht geladen werden.</div>';
+      '<div class="loading-row">Beiträge konnten nicht geladen werden.</div>';
+  }
+}
+  async function deleteForumPost(postId, threadId) {
+  if (!confirm('Diesen Beitrag wirklich löschen?')) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/forum/posts/${postId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error('Löschen fehlgeschlagen.');
+    }
+
+    showToast('Beitrag gelöscht.');
+    loadForumThread(threadId);
+
+  } catch (err) {
+    showToast('Beitrag konnte nicht gelöscht werden.', true);
   }
 }
   // On load: check if already logged in as admin
