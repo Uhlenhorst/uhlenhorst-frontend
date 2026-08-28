@@ -1231,6 +1231,14 @@ async function loadForumAdmin() {
   onclick="toggleForumVisibility('${post.id}', '${threadId}', ${post.is_hidden ? 'false' : 'true'})">
   ${post.is_hidden ? 'Einblenden' : 'Ausblenden'}
 </button>
+${post.author_email ? `
+<button
+  class="btn"
+  style="margin-right:8px;"
+  onclick='emailForumAuthor(${JSON.stringify(post.author_email)})'>
+  Verfasser anschreiben
+</button>
+` : ''}
         <button
           class="btn"
           onclick="deleteForumPost('${post.id}', '${threadId}')">
@@ -1327,6 +1335,22 @@ async function editForumPost(postId, threadId) {
   } catch (err) {
     showToast(err.message || 'Beitrag konnte nicht ausgeblendet werden.', true);
   }
+}
+  function emailForumAuthor(email) {
+  const subject = 'Hinweis zu Ihrem Beitrag im Forum – Auf der Uhlenhorst';
+  const body = `Guten Tag,
+
+wir möchten Sie auf einen Beitrag im Forum „Auf der Uhlenhorst“ hinweisen.
+
+Der Beitrag entspricht in dieser Form nicht unseren Regeln bzw. unserem gewünschten Umgang miteinander.
+
+Bitte prüfen Sie Ihren Beitrag entsprechend.
+
+Viele Grüße
+Auf der Uhlenhorst`;
+
+  window.location.href =
+    `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
   // On load: check if already logged in as admin
   window.addEventListener('DOMContentLoaded', () => {
