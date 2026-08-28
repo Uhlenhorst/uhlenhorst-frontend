@@ -1118,7 +1118,40 @@
     div.textContent = str || '';
     return div.innerHTML;
   }
+async function loadForumAdmin() {
+  const container = document.getElementById('forumAdminContainer');
+  if (!container) return;
 
+  container.innerHTML = '<div class="loading-row">Lädt Forum-Beiträge …</div>';
+
+  try {
+    const res = await fetch(`${API_BASE}/forum/threads`);
+    const threads = await res.json();
+
+    if (!res.ok) {
+      throw new Error('Forum konnte nicht geladen werden.');
+    }
+
+    if (!threads.length) {
+      container.innerHTML = '<div class="loading-row">Noch keine Forum-Themen vorhanden.</div>';
+      return;
+    }
+
+    container.innerHTML = threads.map(thread => `
+      <div class="panel-card" style="margin-bottom:14px;">
+        <strong>${escapeHtml(thread.title || 'Ohne Titel')}</strong>
+        <div style="font-size:0.85rem; color:#5c6e79; margin-top:6px;">
+          ${escapeHtml(thread.author_name || 'Unbekannt')}
+          ${thread.category_name ? ' · ' + escapeHtml(thread.category_name) : ''}
+        </div>
+      </div>
+    `).join('');
+
+  } catch (err) {
+    container.innerHTML =
+      '<div class="loading-row">Forum konnte nicht geladen werden.</div>';
+  }
+}
   // On load: check if already logged in as admin
   window.addEventListener('DOMContentLoaded', () => {
     if (token && user && user.role === 'admin') {
