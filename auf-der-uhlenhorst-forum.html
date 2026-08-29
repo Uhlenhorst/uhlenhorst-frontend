@@ -432,7 +432,7 @@ Das Forum bringt Menschen und Themen zusammen. Keine Meckerecke, dafür Austausc
           <span class="post-date">${timeAgo(p.created_at)}</span>
         </div>
         <div class="post-body">${escapeHtml(p.body)}</div>
-        ${p.image_url ? `<img class="post-image" src="${escapeHtml(p.image_url)}" alt="Bild zum Beitrag" onclick="openLightbox(event, '${escapeHtml(p.image_url)}')">` : ''}
+        ${p.image_url && !p.is_image_hidden ? `<img class="post-image" src="${escapeHtml(p.image_url)}" alt="Bild zum Beitrag" onclick="openLightbox(event, '${escapeHtml(p.image_url)}')">` : ''}
         ${isAdmin ? `<div style="margin-top:10px;"><button class="post-delete" onclick="deletePost('${p.id}')">Löschen</button></div>` : ''}
       </div>
     `).join('');
