@@ -1182,6 +1182,12 @@ async function loadForumAdmin() {
 <button
   class="btn"
   style="margin-top:12px; margin-left:8px;"
+  onclick="toggleForumThreadVisibility('${thread.id}', ${thread.is_hidden ? 'false' : 'true'})">
+  ${thread.is_hidden ? 'Thema einblenden' : 'Thema ausblenden'}
+</button>
+<button
+  class="btn"
+  style="margin-top:12px; margin-left:8px;"
   onclick="deleteForumThread('${thread.id}')">
   Thema löschen
 </button>
@@ -1352,6 +1358,32 @@ async function deleteForumThread(threadId) {
 
   } catch (err) {
     showToast(err.message || 'Thema konnte nicht geändert werden.', true);
+  }
+}
+  async function toggleForumThreadVisibility(threadId, hidden) {
+  try {
+    const res = await fetch(`${API_BASE}/forum/threads/${threadId}/visibility`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        is_hidden: hidden
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Änderung fehlgeschlagen.');
+    }
+
+    showToast(hidden ? 'Thema ausgeblendet.' : 'Thema wieder eingeblendet.');
+    loadForumAdmin();
+
+  } catch (err) {
+    showToast(err.message || 'Sichtbarkeit konnte nicht geändert werden.', true);
   }
 }
 async function editForumPost(postId, threadId) {
