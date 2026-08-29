@@ -1170,6 +1170,11 @@ async function loadForumAdmin() {
 
     <div style="font-size:0.85rem; color:#5c6e79; margin-top:6px;">
       Verfasser: ${escapeHtml(thread.author_name || 'Unbekannt')}
+      ${thread.author_email ? `
+  <div style="font-size:0.82rem; margin-top:3px;">
+    E-Mail: ${escapeHtml(thread.author_email)}
+  </div>
+` : ''}
       ${thread.category_name ? ' · ' + escapeHtml(thread.category_name) : ''}
     </div>
 
@@ -1191,6 +1196,14 @@ async function loadForumAdmin() {
   onclick="toggleForumThreadVisibility('${thread.id}', ${thread.is_hidden ? 'false' : 'true'})">
   ${thread.is_hidden ? 'Thema einblenden' : 'Thema ausblenden'}
 </button>
+${thread.author_email ? `
+<button
+  class="btn"
+  style="margin-top:12px; margin-left:8px;"
+  onclick='emailForumAuthor(${JSON.stringify(thread.author_email)})'>
+  Verfasser anschreiben
+</button>
+` : ''}
 <button
   class="btn"
   style="margin-top:12px; margin-left:8px;"
