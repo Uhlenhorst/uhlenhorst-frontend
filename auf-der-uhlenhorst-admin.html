@@ -1212,6 +1212,11 @@ async function loadForumAdmin() {
     container.innerHTML = posts.map(post => `
       <div style="border-top:1px solid #d7dee3; padding:14px 0;">
         <div style="font-size:0.85rem; color:#5c6e79; margin-bottom:8px;">
+        ${post.is_hidden ? `
+  <div style="display:inline-block; background:#8b1e1e; color:white; padding:4px 9px; border-radius:5px; font-size:0.75rem; font-weight:700; margin-bottom:8px;">
+    AUSGEBLENDET
+  </div>
+` : ''}
           <strong>${escapeHtml(post.author_name || 'Unbekannt')}</strong>
           · ${post.created_at ? new Date(post.created_at).toLocaleString('de-DE') : ''}
         </div>
