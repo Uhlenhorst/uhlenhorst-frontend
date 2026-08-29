@@ -1173,6 +1173,12 @@ async function loadForumAdmin() {
       onclick="loadForumThread('${thread.id}')">
       Beiträge anzeigen
     </button>
+    <button
+  class="btn"
+  style="margin-top:12px; margin-left:8px;"
+  onclick="editForumThread('${thread.id}')">
+  Thema bearbeiten
+</button>
 <button
   class="btn"
   style="margin-top:12px; margin-left:8px;"
@@ -1311,6 +1317,41 @@ async function deleteForumThread(threadId) {
 
   } catch (err) {
     showToast(err.message || 'Thema konnte nicht gelöscht werden.', true);
+  }
+}
+  async function editForumThread(threadId) {
+  const neuerTitel = prompt('Neuen Titel für das Thema eingeben:');
+
+  if (neuerTitel === null) return;
+
+  if (!neuerTitel.trim()) {
+    alert('Der Titel darf nicht leer sein.');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/forum/threads/${threadId}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: neuerTitel.trim()
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Bearbeiten fehlgeschlagen.');
+    }
+
+    showToast('Thema geändert.');
+    loadForumAdmin();
+
+  } catch (err) {
+    showToast(err.message || 'Thema konnte nicht geändert werden.', true);
   }
 }
 async function editForumPost(postId, threadId) {
