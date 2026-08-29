@@ -1285,6 +1285,22 @@ ${post.author_email ? `
   Verfasser anschreiben
 </button>
 ` : ''}
+${post.image_url ? `
+  <button
+    class="btn"
+    style="margin-left:8px;"
+    onclick="toggleForumPostImageVisibility('${post.id}', '${threadId}', ${post.is_image_hidden ? 'false' : 'true'})">
+    ${post.is_image_hidden ? 'Bild einblenden' : 'Bild ausblenden'}
+  </button>
+
+  <button
+    class="btn"
+    style="margin-left:8px;"
+    onclick="deleteForumPostImage('${post.id}', '${threadId}')">
+    Bild löschen
+  </button>
+` : ''}
+
         <button
           class="btn"
           onclick="deleteForumPost('${post.id}', '${threadId}')">
@@ -1318,6 +1334,57 @@ ${post.author_email ? `
 
   } catch (err) {
     showToast('Beitrag konnte nicht gelöscht werden.', true);
+  }
+}
+  async function toggleForumPostImageVisibility(postId, threadId, isHidden) {
+  try {
+    const res = await fetch(`${API_BASE}/forum/posts/${postId}/image-visibility`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        is_hidden: isHidden
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Bild konnte nicht geändert werden.');
+    }
+
+    showToast(data.message || 'Bild geändert.');
+    loadForumThread(threadId);
+
+  } catch (err) {
+    showToast(err.message || 'Bild konnte nicht geändert werden.', true);
+  }
+}
+
+async function deleteForumPostImage(postId, threadId) {
+  if (!confirm('Dieses Bild wirklich endgültig löschen?')) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/forum/posts/${postId}/image`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Bild konnte nicht gelöscht werden.');
+    }
+
+    showToast('Bild gelöscht.');
+    loadForumThread(threadId);
+
+  } catch (err) {
+    showToast(err.message || 'Bild konnte nicht gelöscht werden.', true);
   }
 }
 async function deleteForumThread(threadId) {
