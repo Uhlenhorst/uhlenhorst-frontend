@@ -1160,6 +1160,12 @@ async function loadForumAdmin() {
 
     container.innerHTML = threads.map(thread => `
   <div class="panel-card" style="margin-bottom:14px;">
+  ${thread.is_hidden ? `
+  <div style="display:inline-block; background:#8b1e1e; color:white; padding:4px 9px; border-radius:5px; font-size:0.75rem; font-weight:700; margin-bottom:8px;">
+    AUSGEBLENDET
+  </div>
+  <br>
+` : ''}
     <strong>${escapeHtml(thread.title || 'Ohne Titel')}</strong>
 
     <div style="font-size:0.85rem; color:#5c6e79; margin-top:6px;">
