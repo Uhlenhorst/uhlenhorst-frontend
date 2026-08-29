@@ -1173,7 +1173,12 @@ async function loadForumAdmin() {
       onclick="loadForumThread('${thread.id}')">
       Beiträge anzeigen
     </button>
-
+<button
+  class="btn"
+  style="margin-top:12px; margin-left:8px;"
+  onclick="deleteForumThread('${thread.id}')">
+  Thema löschen
+</button>
     <div id="forum-thread-${thread.id}" style="margin-top:12px;"></div>
   </div>
 `).join('');
@@ -1284,7 +1289,30 @@ ${post.author_email ? `
     showToast('Beitrag konnte nicht gelöscht werden.', true);
   }
 }
+async function deleteForumThread(threadId) {
+  if (!confirm('Dieses Thema wirklich endgültig löschen?')) return;
 
+  try {
+    const res = await fetch(`${API_BASE}/forum/threads/${threadId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Löschen fehlgeschlagen.');
+    }
+
+    showToast('Thema gelöscht.');
+    loadForumAdmin();
+
+  } catch (err) {
+    showToast(err.message || 'Thema konnte nicht gelöscht werden.', true);
+  }
+}
 async function editForumPost(postId, threadId) {
   const neuerText = prompt('Neuen Beitragstext eingeben:');
 
