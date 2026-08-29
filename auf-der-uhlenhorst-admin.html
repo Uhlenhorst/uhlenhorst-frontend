@@ -1147,7 +1147,7 @@ async function loadForumAdmin() {
 
   try {
     const res = await fetch(`${API_BASE}/forum/threads`);
-    const threads = await res.json();
+    const threads = (await res.json()).filter(thread => Number(thread.is_hidden) !== 1);
 
     if (!res.ok) {
       throw new Error('Forum konnte nicht geladen werden.');
