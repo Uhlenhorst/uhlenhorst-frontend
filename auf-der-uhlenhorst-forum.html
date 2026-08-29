@@ -364,7 +364,7 @@ Das Forum bringt Menschen und Themen zusammen. Keine Meckerecke, dafür Austausc
         ? `${API_BASE}/forum/threads?category=${activeCategorySlug}`
         : `${API_BASE}/forum/threads`;
       const res = await fetch(url);
-      const threads = await res.json();
+      const threads = (await res.json()).filter(thread => Number(thread.is_hidden) !== 1);
 
       if (threads.length === 0) {
         container.innerHTML = `
