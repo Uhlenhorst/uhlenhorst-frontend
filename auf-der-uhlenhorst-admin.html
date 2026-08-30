@@ -775,6 +775,12 @@
   onclick="editBusiness('${biz.id}')">
   Bearbeiten
 </button>
+<button
+  class="btn-approve"
+  style="flex:none; padding:10px 18px;"
+  onclick="changeBusinessImage('${biz.id}')">
+  Bild ändern
+</button>
           <button class="btn-reject" style="flex:none; padding:10px 18px;" onclick="deleteBusiness('${biz.id}', '${escapeHtml(biz.name).replace(/'/g, "\\'")}')">Löschen</button>
         </div>
       </div>
