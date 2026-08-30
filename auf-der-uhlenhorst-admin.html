@@ -875,6 +875,77 @@ async function editBusiness(id) {
     showToast(err.message || 'Geschäft konnte nicht geändert werden.', true);
   }
 }
+  async function changeBusinessImage(id) {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+
+  input.onchange = async () => {
+    const file = input.files[0];
+    if (!file) return;
+
+    try {
+      showToast('Bild wird hochgeladen …');
+
+      const sigRes = await fetch(`${API_BASE}/upload/signature`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!sigRes.ok) {
+        throw new Error('Upload-Signatur konnte nicht geladen werden.');
+      }
+
+      const sig = await sigRes.json();
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('api_key', sig.apiKey);
+      formData.append('timestamp', sig.timestamp);
+      formData.append('signature', sig.signature);
+
+      const cloudRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`,
+        {
+          method: 'POST',
+          body: formData
+        }
+      );
+
+      const cloudData = await cloudRes.json();
+
+      if (!cloudData.secure_url) {
+        throw new Error('Bild konnte nicht hochgeladen werden.');
+      }
+
+      const saveRes = await fetch(`${API_BASE}/businesses/${id}/image`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          image_url: cloudData.secure_url
+        })
+      });
+
+      const result = await saveRes.json();
+
+      if (!saveRes.ok) {
+        throw new Error(result.error || 'Bild konnte nicht gespeichert werden.');
+      }
+
+      showToast('Geschäftsbild aktualisiert.');
+      loadPendingBusinesses();
+
+    } catch (err) {
+      showToast(err.message || 'Bild konnte nicht geändert werden.', true);
+    }
+  };
+
+  input.click();
+}
   function renderList(items) {
     const container = document.getElementById('listContainer');
 
