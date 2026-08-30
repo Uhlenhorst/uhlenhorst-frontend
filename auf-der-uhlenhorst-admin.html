@@ -742,6 +742,9 @@
       loadUhlenhorstPage();
       uhlenhorstDataLoaded = true;
     }
+    if (tabName === 'events') {
+  loadEventsAdmin();
+}
     if (tabName === 'shop' && !shopDataLoaded) {
       loadShopProducts();
       shopDataLoaded = true;
@@ -1142,6 +1145,125 @@
       btn.textContent = 'Produkte von Printful synchronisieren';
     }
   }
+  async function loadEventsAdmin() {
+  const container = document.getElementById('eventsAdminContainer');
+  if (!container) return;
+
+  container.innerHTML =
+    '<div class="loading-row">Termine werden geladen …</div>';
+
+  try {
+    const res = await fetch(`${API_BASE}/events`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Termine konnten nicht geladen werden.');
+    }
+
+    const events = Array.isArray(data) ? data : (data.events || []);
+
+    if (!events.length) {
+      container.innerHTML =
+        '<div class="loading-row">Noch keine Termine vorhanden.</div>';
+      return;
+    }
+
+    container.innerHTML = events.map(event => `
+      <div class="panel-card" style="margin-bottom:16px;">
+        <h3>${escapeHtml(event.title || '')}</h3>
+
+        ${event.description
+          ? `<p>${escapeHtml(event.description)}</p>`
+          : ''}
+
+        ${event.location
+          ? `<p><strong>Ort:</strong> ${escapeHtml(event.location)}</p>`
+          : ''}
+
+        <p>
+          <strong>Beginn:</strong>
+          ${escapeHtml(event.starts_at || '')}
+        </p>
+
+        ${event.ends_at
+          ? `<p><strong>Ende:</strong> ${escapeHtml(event.ends_at)}</p>`
+          : ''}
+
+        ${event.image_url
+          ? `<img src="${escapeHtml(event.image_url)}"
+                  alt=""
+                  style="max-width:240px; max-height:160px; object-fit:cover; margin-top:10px;">`
+          : ''}
+      </div>
+    `).join('');
+
+  } catch (err) {
+    container.innerHTML =
+      '<div class="loading-row">Termine konnten nicht geladen werden.</div>';
+  }
+}
+
+  async function createEvent() {
+  const title = document.getElementById('eventTitle').value.trim();
+  const description = document.getElementById('eventDescription').value.trim();
+  const location = document.getElementById('eventLocation').value.trim();
+  const startsAt = document.getElementById('eventStartsAt').value;
+  const endsAt = document.getElementById('eventEndsAt').value;
+  const imageUrl = document.getElementById('eventImageUrl').value.trim();
+
+  if (!title) {
+    showToast('Bitte einen Titel eingeben.', true);
+    return;
+  }
+
+  if (!startsAt) {
+    showToast('Bitte einen Beginn eingeben.', true);
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/events`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: title,
+        description: description || null,
+        location: location || null,
+        starts_at: startsAt,
+        ends_at: endsAt || null,
+        image_url: imageUrl || null
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Termin konnte nicht gespeichert werden.');
+    }
+
+    showToast('Termin gespeichert.');
+
+    document.getElementById('eventTitle').value = '';
+    document.getElementById('eventDescription').value = '';
+    document.getElementById('eventLocation').value = '';
+    document.getElementById('eventStartsAt').value = '';
+    document.getElementById('eventEndsAt').value = '';
+    document.getElementById('eventImageUrl').value = '';
+
+    loadEventsAdmin();
+
+  } catch (err) {
+    showToast(err.message || 'Termin konnte nicht gespeichert werden.', true);
+  }
+}
 
   async function loadShopProducts() {
     const container = document.getElementById('shopProductsContainer');
