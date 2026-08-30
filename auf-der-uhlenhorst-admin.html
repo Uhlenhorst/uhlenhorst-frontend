@@ -769,6 +769,12 @@
           ${biz.description ? `<strong>Beschreibung:</strong> ${escapeHtml(biz.description)}<br>` : ''}
         </div>
         <div class="request-actions">
+          <button
+  class="btn-approve"
+  style="flex:none; padding:10px 18px;"
+  onclick="editBusiness('${biz.id}')">
+  Bearbeiten
+</button>
           <button class="btn-reject" style="flex:none; padding:10px 18px;" onclick="deleteBusiness('${biz.id}', '${escapeHtml(biz.name).replace(/'/g, "\\'")}')">Löschen</button>
         </div>
       </div>
