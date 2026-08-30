@@ -503,6 +503,49 @@
     </div>
   </div>
 
+<!-- ===== TAB: Moin Uhlenhorst / Termine ===== -->
+<div class="tab-panel" id="tab-events">
+
+  <div class="page-head">
+    <div class="eyebrow">Moin Uhlenhorst</div>
+    <h1>Termine verwalten</h1>
+  </div>
+
+  <div class="panel-card">
+    <h3>Neuen Termin eintragen</h3>
+
+    <label for="eventTitle">Titel *</label>
+    <input type="text" id="eventTitle" placeholder="Titel der Veranstaltung">
+
+    <label for="eventDescription">Beschreibung</label>
+    <textarea id="eventDescription" placeholder="Beschreibung des Termins"></textarea>
+
+    <label for="eventLocation">Ort</label>
+    <input type="text" id="eventLocation" placeholder="Veranstaltungsort">
+
+    <label for="eventStartsAt">Beginn *</label>
+    <input type="datetime-local" id="eventStartsAt">
+
+    <label for="eventEndsAt">Ende</label>
+    <input type="datetime-local" id="eventEndsAt">
+
+    <label for="eventImageUrl">Bild-URL</label>
+    <input type="text" id="eventImageUrl" placeholder="Optional">
+
+    <button class="btn-save" onclick="createEvent()">
+      Termin speichern
+    </button>
+  </div>
+
+  <div class="panel-card" style="margin-top:24px;">
+    <h3>Vorhandene Termine</h3>
+    <div id="eventsAdminContainer">
+      <div class="loading-row">Termine werden geladen …</div>
+    </div>
+  </div>
+
+</div>
+  
   <!-- ===== TAB: Unser Uhlenhorst ===== -->
   <div class="tab-panel" id="tab-uhlenhorst">
     <div class="page-head">
