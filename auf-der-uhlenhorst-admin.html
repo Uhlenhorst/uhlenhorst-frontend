@@ -808,7 +808,67 @@
       if (card) card.querySelectorAll('button').forEach(b => b.disabled = false);
     }
   }
+async function editBusiness(id) {
+  try {
+    const res = await fetch(`${API_BASE}/businesses`);
+    const data = await res.json();
 
+    if (!res.ok) {
+      throw new Error(data.error || 'Geschäft konnte nicht geladen werden.');
+    }
+
+    const businesses = Array.isArray(data) ? data : (data.businesses || []);
+    const biz = businesses.find(b => String(b.id) === String(id));
+
+    if (!biz) {
+      showToast('Geschäft nicht gefunden.', true);
+      return;
+    }
+
+    const name = prompt('Name des Geschäfts:', biz.name || '');
+    if (name === null) return;
+
+    const category = prompt('Kategorie:', biz.category || '');
+    if (category === null) return;
+
+    const address = prompt('Adresse:', biz.address || '');
+    if (address === null) return;
+
+    const description = prompt('Beschreibung:', biz.description || '');
+    if (description === null) return;
+
+    if (!name.trim() || !category.trim() || !address.trim()) {
+      showToast('Name, Kategorie und Adresse sind erforderlich.', true);
+      return;
+    }
+
+    const saveRes = await fetch(`${API_BASE}/businesses/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        name: name.trim(),
+        category: category.trim(),
+        address: address.trim(),
+        description: description.trim()
+      })
+    });
+
+    const result = await saveRes.json();
+
+    if (!saveRes.ok) {
+      throw new Error(result.error || 'Änderung fehlgeschlagen.');
+    }
+
+    showToast('Geschäft aktualisiert.');
+    loadPendingBusinesses();
+
+  } catch (err) {
+    showToast(err.message || 'Geschäft konnte nicht geändert werden.', true);
+  }
+}
   function renderList(items) {
     const container = document.getElementById('listContainer');
 
