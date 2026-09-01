@@ -479,6 +479,46 @@
       setLoading('loginBtn', false, 'Anmelden');
     }
   }
+  async function forgotPassword() {
+  hideMsg();
+
+  let email = document.getElementById('loginEmail').value.trim();
+
+  if (!email) {
+    email = prompt('Bitte gib deine E-Mail-Adresse ein:') || '';
+    email = email.trim();
+  }
+
+  if (!email) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showMsg(data.error || 'Die Anfrage konnte nicht verarbeitet werden.', 'error');
+      return;
+    }
+
+    showMsg(
+      data.message || 'Wenn die E-Mail-Adresse registriert ist, wurde ein Link zum Zurücksetzen des Passworts versendet.',
+      'success'
+    );
+
+  } catch (err) {
+    showMsg(
+      'Verbindung zum Server fehlgeschlagen. Bitte erneut versuchen.',
+      'error'
+    );
+  }
+}
 
   async function handleRegister(event) {
     event.preventDefault();
