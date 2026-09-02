@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>E-Mail-Adresse bestätigen – Auf der Uhlenhorst</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #1d2b5b;
+    }
+
+    .wrap {
+      max-width: 520px;
+      margin: 80px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 32px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .msg {
+      margin-top: 20px;
+      padding: 14px;
+      border-radius: 8px;
+    }
+
+    .success {
+      background: #e8f5e9;
+      color: #256029;
+    }
+
+    .error {
+      background: #fdecea;
+      color: #a32020;
+    }
+
+    .loading {
+      background: #eef1f7;
+      color: #1d2b5b;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      color: #1d2b5b;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="wrap">
+  <div class="card">
+
+    <h1>E-Mail-Adresse bestätigen</h1>
+
+    <div id="msg" class="msg loading">
+      Die neue E-Mail-Adresse wird bestätigt …
+    </div>
+
+    <a
+      id="loginLink"
+      href="auf-der-uhlenhorst-login.html"
+      style="display:none;"
+    >
+      Zur Anmeldung
+    </a>
+
+  </div>
+</div>
+
+<script>
+const API_BASE = 'https://api.aufderuhlenhorst.de';
+
+async function confirmEmailChange() {
+  const msg = document.getElementById('msg');
+  const loginLink = document.getElementById('loginLink');
+
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+
+  if (!token) {
+    msg.textContent = 'Der Bestätigungslink ist ungültig.';
+    msg.className = 'msg error';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/auth/change-email-confirm`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        token: token
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      msg.textContent =
+        data.error || 'Die E-Mail-Adresse konnte nicht bestätigt werden.';
+      msg.className = 'msg error';
+      return;
+    }
+
+    msg.textContent =
+      data.message || 'Deine E-Mail-Adresse wurde erfolgreich geändert.';
+    msg.className = 'msg success';
+
+    loginLink.style.display = 'inline-block';
+
+  } catch (err) {
+    msg.textContent =
+      'Verbindung zum Server fehlgeschlagen. Bitte erneut versuchen.';
+    msg.className = 'msg error';
+  }
+}
+
+confirmEmailChange();
+</script>
+
+</body>
+</html>
