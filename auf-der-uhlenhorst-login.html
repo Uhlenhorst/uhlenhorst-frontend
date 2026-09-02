@@ -410,6 +410,9 @@
       <span class="role-tag" id="roleTag">Anwohner</span>
       <p>Du bist angemeldet bei Auf der Uhlenhorst.</p>
       <button class="btn-submit" style="margin-top:4px;" onclick="window.location.href='auf-der-uhlenhorst-home.html'">Zur Startseite</button>
+      <button class="btn-submit" style="margin-top:4px;" onclick="changeEmail()">
+  E-Mail-Adresse ändern
+</button>
       <button class="btn-logout" onclick="handleLogout()">Abmelden</button>
     </div>
 
@@ -560,7 +563,60 @@
     const roleLabels = { anwohner: 'Anwohner', geschaeftsinhaber: 'Geschäftsinhaber', admin: 'Admin' };
     document.getElementById('roleTag').textContent = roleLabels[user.role] || user.role;
   }
+async function changeEmail() {
+  hideMsg();
 
+  const token = localStorage.getItem('uhlenhorst_token');
+
+  if (!token) {
+    showMsg('Bitte melde dich erneut an.', 'error');
+    return;
+  }
+
+  let newEmail = prompt('Bitte gib deine neue E-Mail-Adresse ein:') || '';
+  newEmail = newEmail.trim();
+
+  if (!newEmail) return;
+
+  const password = prompt('Bitte gib zur Sicherheit dein aktuelles Passwort ein:') || '';
+
+  if (!password) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/auth/change-email-request`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        email: newEmail,
+        password: password
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showMsg(
+        data.error || 'Die E-Mail-Adresse konnte nicht geändert werden.',
+        'error'
+      );
+      return;
+    }
+
+    showMsg(
+      data.message || 'Bestätigungs-E-Mail wurde versendet.',
+      'success'
+    );
+
+  } catch (err) {
+    showMsg(
+      'Verbindung zum Server fehlgeschlagen. Bitte erneut versuchen.',
+      'error'
+    );
+  }
+}
   function handleLogout() {
     localStorage.removeItem('uhlenhorst_token');
     localStorage.removeItem('uhlenhorst_user');
