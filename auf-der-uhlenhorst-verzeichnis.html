@@ -484,15 +484,16 @@ nav.main-nav a:hover, nav.main-nav a.active { color: var(--gold); }
 <main> <div class="business-frieze" id="businessFrieze">
   <img src="bilderfries-geschaefte.png" alt="Geschäfte auf der Uhlenhorst" style="width:100%; height:auto; display:block; border-radius:8px;">
 </div>
+  <div class="submit-banner">
+  <p><strong>Du hast ein Geschäft auf der Uhlenhorst?</strong> Trage es kostenlos ein – nach kurzer Prüfung ist es für alle sichtbar.</p>
+  <button class="btn btn-gold" onclick="openSubmitModal()">Jetzt eintragen</button>
+</div>
   <div class="toolbar">
     <input type="text" class="search-input" id="searchInput" placeholder="Geschäft, Café, Praxis suchen …" oninput="applyFilters()">
   </div>
 
   <div class="az-row" id="azRow"></div>
-<div class="submit-banner">
-  <p><strong>Du hast ein Geschäft auf der Uhlenhorst?</strong> Trage es kostenlos ein – nach kurzer Prüfung ist es für alle sichtbar.</p>
-  <button class="btn btn-gold" onclick="openSubmitModal()">Jetzt eintragen</button>
-</div>
+
 <div class="content-grid" style="margin-top:28px;">    
   <div id="listContainer">
       <div class="loading-state">Lädt Geschäfte …</div>
