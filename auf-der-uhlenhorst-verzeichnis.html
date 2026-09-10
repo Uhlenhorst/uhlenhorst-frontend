@@ -74,8 +74,16 @@ nav.main-nav a:hover, nav.main-nav a.active { color: var(--gold); }
     border: none;
     transition: all 0.2s;
   }
-  .btn-gold { background: var(--gold); color: var(--deep); }
-  .btn-gold:hover { background: #d9b566; }
+  .btn-gold {
+  background: transparent;
+  color: var(--white);
+  border: 2px solid var(--gold);
+}
+
+.btn-gold:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--white);
+}
   .btn-ghost { background: var(--gold); color: var(--deep); border: 1px solid var(--gold); }
   .btn-ghost:hover { background: #d9b566; border-color: #d9b566; }
   .user-pill {
