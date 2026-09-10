@@ -30,8 +30,16 @@
   .uh-header-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
   .uh-logo-img { height: 58px; width: auto; display: block; }
   .btn { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-width: 118px; height: 40px; padding: 0 18px; line-height: 1; border-radius: 5px; font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
-  .btn-gold { background: var(--gold); color: var(--deep); }
-  .btn-gold:hover { background: #d9b566; }
+  .btn-gold {
+  background: transparent;
+  color: var(--white);
+  border: 2px solid var(--gold);
+}
+
+.btn-gold:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--white);
+}
   .btn-ghost { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
   .btn-ghost:hover { border-color: var(--white); }
   .user-pill { color: rgba(255,255,255,0.85); font-size: 0.85rem; white-space: nowrap; }
