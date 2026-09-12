@@ -569,9 +569,16 @@ let currentQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let selectedAnswer = null;
-
+let currentAnswerOptions = [];
 function shuffleArray(array) {
-  return [...array].sort(() => Math.random() - 0.5);
+  const newArray = [...array];
+
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+
+  return newArray;
 }
 
 function startQuiz(level) {
@@ -612,14 +619,20 @@ function renderQuestion() {
   const answersBox = document.getElementById("quiz-answers");
   answersBox.innerHTML = "";
 
-  selectedAnswer = null;
+ selectedAnswer = null;
 
-  q.answers.forEach((answer, index) => {
+currentAnswerOptions = shuffleArray(
+  q.answers.map((answer, index) => ({
+    text: answer,
+    correct: index === q.correct
+  }))
+);
+
+currentAnswerOptions.forEach((answerOption, index) => {
     const button = document.createElement("button");
 
     button.type = "button";
-    button.textContent = answer;
-
+button.textContent = answerOption.text;
     button.style.cssText = `
       width:100%;
       text-align:left;
@@ -664,17 +677,20 @@ function checkAnswer() {
 
   const q = currentQuestions[currentIndex];
   const buttons = document.querySelectorAll("#quiz-answers button");
+  const correctIndex = currentAnswerOptions.findIndex(
+  answer => answer.correct
+);
 
   buttons.forEach((button, index) => {
     button.disabled = true;
     button.style.cursor = "default";
 
-    if (index === q.correct) {
+    if (index === correctIndex) {
       button.style.borderColor = "#1e6b44";
       button.style.background = "#e7f3ec";
     }
 
-    if (index === selectedAnswer && selectedAnswer !== q.correct) {
+    if (index === selectedAnswer && selectedAnswer !== correctIndex) {
       button.style.borderColor = "#b3261e";
       button.style.background = "#fdecea";
     }
@@ -682,7 +698,7 @@ function checkAnswer() {
 
   const feedback = document.getElementById("quiz-feedback");
 
-  if (selectedAnswer === q.correct) {
+  if (selectedAnswer === correctIndex) {
     score++;
     feedback.innerHTML = `
       <strong style="color:#1e6b44; font-size:1.1rem;">✓ Richtig!</strong>
@@ -695,8 +711,8 @@ function checkAnswer() {
     feedback.innerHTML = `
       <strong style="color:#b3261e; font-size:1.1rem;">Fast!</strong>
       <p style="margin:8px 0 0;">
-        Richtig ist: <strong>${q.answers[q.correct]}</strong>
-      </p>
+Richtig ist: <strong>${currentAnswerOptions[correctIndex].text}</strong>      
+</p>
       <div style="margin-top:14px;">
         <strong style="color:var(--tief);">SCHON GEWUSST?</strong>
         <p style="margin:7px 0 0; line-height:1.6;">${q.info}</p>
