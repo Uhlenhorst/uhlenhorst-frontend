@@ -296,8 +296,8 @@
       <div class="quiz-card-body">
         <h2>KENNER</h2>
         <p>15 Fragen für alle, die die Uhlenhorst schon gut kennen.</p>
-        <button class="quiz-start">Quiz starten →</button>
-      </div>
+<button class="quiz-start" onclick="startQuiz('kenner')">Quiz starten →</button>
+       </div>
     </article>
 
     <article class="quiz-card">
@@ -317,7 +317,55 @@
     </article>
 
   </div>
+<section id="quiz-game" style="display:none; margin-top:32px;">
 
+  <div style="max-width:820px; margin:0 auto;">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <strong id="quiz-level" style="color:var(--tief);">KENNER</strong>
+      <span id="quiz-progress">Frage 1 von 15</span>
+    </div>
+
+    <div style="height:8px; background:#e5ebef; border-radius:999px; overflow:hidden; margin-bottom:28px;">
+      <div id="quiz-progress-bar"
+           style="height:100%; width:6.66%; background:var(--gold); transition:width .25s ease;">
+      </div>
+    </div>
+
+    <div style="border:1px solid #dfe5ea; border-radius:10px; padding:28px; background:#fff;">
+
+      <h2 id="quiz-question"
+          style="margin:0 0 22px; color:var(--tief); font-size:1.6rem;">
+        Frage
+      </h2>
+
+      <div id="quiz-answers"
+           style="display:grid; gap:12px;">
+      </div>
+
+      <button id="check-answer"
+              class="quiz-start"
+              style="margin-top:22px;"
+              onclick="checkAnswer()">
+        Antwort prüfen
+      </button>
+
+      <div id="quiz-feedback"
+           style="display:none; margin-top:24px; padding:20px; background:#edf4f8; border-radius:8px;">
+      </div>
+
+      <button id="next-question"
+              class="quiz-start"
+              style="display:none; margin-top:18px;"
+              onclick="nextQuestion()">
+        Nächste Frage →
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
   <div class="community-box">
     <div>
       <h3>Du hast einen Lieblingsplatz auf der Uhlenhorst?</h3>
@@ -345,6 +393,416 @@
 
   </div>
 </footer>
+<script>
+const quizData = {
+  kenner: [
+    {
+      question: "Welcher kleine See liegt auf der Uhlenhorst?",
+      answers: [
+        "Feenteich",
+        "Goldbeksee",
+        "Stadtparksee",
+        "Bramfelder See"
+      ],
+      correct: 0,
+      info: "Der Feenteich gehört zu den idyllischsten Wasserlagen der Uhlenhorst und ist mit der Alster verbunden."
+    },
+    {
+      question: "Welche Kirche steht direkt am Kuhmühlenteich?",
+      answers: [
+        "St. Gertrud",
+        "St. Johannis",
+        "St. Nikolai",
+        "St. Georg"
+      ],
+      correct: 0,
+      info: "St. Gertrud prägt den Bereich am Kuhmühlenteich und gehört zu den markanten historischen Gebäuden der Uhlenhorst."
+    },
+    {
+      question: "Welches bekannte Kulturhaus befindet sich am Schwanenwik?",
+      answers: [
+        "Literaturhaus Hamburg",
+        "Museum der Arbeit",
+        "Thalia Theater",
+        "Planetarium Hamburg"
+      ],
+      correct: 0,
+      info: "Das Literaturhaus Hamburg befindet sich in einer historischen Villa am Schwanenwik."
+    },
+    {
+      question: "Was war die heutige Alsterperle ursprünglich?",
+      answers: [
+        "Ein öffentliches Toilettenhäuschen",
+        "Ein Fahrkartenhäuschen",
+        "Ein Bootshaus",
+        "Eine Zollstation"
+      ],
+      correct: 0,
+      info: "Die heutige Alsterperle war ursprünglich eine öffentliche Bedürfnisanstalt. Aus einem sehr alltäglichen Gebäude wurde später einer der beliebtesten Plätze am Alsterufer."
+    },
+    {
+      question: "Welche Hochschule hat einen Standort in der Armgartstraße?",
+      answers: [
+        "HAW Hamburg",
+        "Universität Hamburg",
+        "TU Hamburg",
+        "HafenCity Universität"
+      ],
+      correct: 0,
+      info: "Die HAW Hamburg ist mit ihrem Standort in der Armgartstraße seit vielen Jahren auf der Uhlenhorst vertreten."
+    },
+    {
+      question: "Welche beiden Straßen gehören zu den bekanntesten Einkaufsstraßen der Uhlenhorst?",
+      answers: [
+        "Hofweg und Papenhuder Straße",
+        "Lange Reihe und Steindamm",
+        "Mühlenkamp und Gertigstraße",
+        "Eppendorfer Baum und Klosterstern"
+      ],
+      correct: 0,
+      info: "Hofweg und Papenhuder Straße bilden einen wichtigen Teil des lokalen Geschäfts- und Gastronomielebens."
+    },
+    {
+      question: "An welchem großen Gewässer liegt die westliche Seite der Uhlenhorst?",
+      answers: [
+        "Außenalster",
+        "Elbe",
+        "Bille",
+        "Dove Elbe"
+      ],
+      correct: 0,
+      info: "Die Außenalster prägt die Uhlenhorst landschaftlich und gehört zu ihren wichtigsten Erkennungsmerkmalen."
+    },
+    {
+      question: "Welcher bekannte Segelverein sitzt unmittelbar an der Außenalster?",
+      answers: [
+        "Norddeutscher Regatta Verein",
+        "Hamburger Segel-Club",
+        "Alster-Ruderverein",
+        "Hamburger Yacht-Club"
+      ],
+      correct: 0,
+      info: "Der Norddeutsche Regatta Verein, kurz NRV, gehört zu den traditionsreichen Segelvereinen Hamburgs."
+    },
+    {
+      question: "Welcher Kanal verläuft südlich der Uhlenhorst?",
+      answers: [
+        "Eilbekkanal",
+        "Goldbekkanal",
+        "Osterbekkanal",
+        "Zollkanal"
+      ],
+      correct: 0,
+      info: "Der Eilbekkanal bildet einen wichtigen Teil der südlichen Begrenzung des Stadtteils."
+    },
+    {
+      question: "Welche Straße führt unmittelbar am Literaturhaus vorbei?",
+      answers: [
+        "Schwanenwik",
+        "Hofweg",
+        "Winterhuder Weg",
+        "Lerchenfeld"
+      ],
+      correct: 0,
+      info: "Das Literaturhaus liegt direkt am Schwanenwik mit Blick in Richtung Außenalster."
+    },
+    {
+      question: "Welcher spätere Bundeskanzler wurde in St. Gertrud konfirmiert?",
+      answers: [
+        "Helmut Schmidt",
+        "Willy Brandt",
+        "Helmut Kohl",
+        "Konrad Adenauer"
+      ],
+      correct: 0,
+      info: "Helmut Schmidt wurde in St. Gertrud konfirmiert und ist eng mit Hamburg verbunden."
+    },
+    {
+      question: "Was befindet sich an der Schönen Aussicht 26?",
+      answers: [
+        "Das Gästehaus des Hamburger Senats",
+        "Das Bezirksamt Hamburg-Nord",
+        "Ein Kunstmuseum",
+        "Ein Generalkonsulat"
+      ],
+      correct: 0,
+      info: "An der Schönen Aussicht 26 befindet sich das Gästehaus des Hamburger Senats, in dem prominente Staatsgäste empfangen wurden."
+    },
+    {
+      question: "Was findet regelmäßig im Bereich Hofweg und Papenhuder Straße statt?",
+      answers: [
+        "Das Uhlenhorster Stadtteilfest",
+        "Der Hamburger Dom",
+        "Das Alstervergnügen",
+        "Der Hafengeburtstag"
+      ],
+      correct: 0,
+      info: "Das Uhlenhorster Stadtteilfest bringt regelmäßig Geschäfte, Gastronomie und Nachbarschaft zusammen."
+    },
+    {
+      question: "Wo liegt der geografische Mittelpunkt Hamburgs?",
+      answers: [
+        "Im Bereich St. Gertrud und Kuhmühlenteich",
+        "Auf dem Rathausmarkt",
+        "Im Stadtpark",
+        "Am Jungfernstieg"
+      ],
+      correct: 0,
+      info: "Der geografische Mittelpunkt Hamburgs liegt überraschend im Bereich von St. Gertrud und Kuhmühlenteich."
+    },
+    {
+      question: "Welcher Stadtteil liegt direkt westlich auf der anderen Seite der Außenalster?",
+      answers: [
+        "Harvestehude",
+        "Barmbek",
+        "Hamm",
+        "Billstedt"
+      ],
+      correct: 0,
+      info: "Auf der gegenüberliegenden Seite der Außenalster liegt unter anderem Harvestehude."
+    }
+  ]
+};
 
+let currentLevel = "kenner";
+let currentQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let selectedAnswer = null;
+
+function shuffleArray(array) {
+  return [...array].sort(() => Math.random() - 0.5);
+}
+
+function startQuiz(level) {
+  currentLevel = level;
+  currentQuestions = shuffleArray(quizData[level]);
+  currentIndex = 0;
+  score = 0;
+  selectedAnswer = null;
+
+  document.querySelector(".quiz-grid").style.display = "none";
+  document.querySelector(".community-box").style.display = "none";
+  document.getElementById("quiz-game").style.display = "block";
+
+  renderQuestion();
+
+  document.getElementById("quiz-game").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+function renderQuestion() {
+  const q = currentQuestions[currentIndex];
+
+  document.getElementById("quiz-level").textContent = currentLevel.toUpperCase();
+  document.getElementById("quiz-progress").textContent =
+    `Frage ${currentIndex + 1} von ${currentQuestions.length}`;
+
+  const progress =
+    ((currentIndex + 1) / currentQuestions.length) * 100;
+
+  document.getElementById("quiz-progress-bar").style.width =
+    progress + "%";
+
+  document.getElementById("quiz-question").textContent =
+    q.question;
+
+  const answersBox = document.getElementById("quiz-answers");
+  answersBox.innerHTML = "";
+
+  selectedAnswer = null;
+
+  q.answers.forEach((answer, index) => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.textContent = answer;
+
+    button.style.cssText = `
+      width:100%;
+      text-align:left;
+      padding:14px 16px;
+      border:1px solid #d7e0e6;
+      border-radius:8px;
+      background:#fff;
+      color:var(--tinte);
+      font-family:inherit;
+      font-size:.95rem;
+      cursor:pointer;
+      transition:.2s;
+    `;
+
+    button.onclick = function() {
+      document.querySelectorAll("#quiz-answers button").forEach(btn => {
+        btn.style.borderColor = "#d7e0e6";
+        btn.style.background = "#fff";
+      });
+
+      button.style.borderColor = "var(--wasser)";
+      button.style.background = "#edf4f8";
+
+      selectedAnswer = index;
+    };
+
+    answersBox.appendChild(button);
+  });
+
+  document.getElementById("quiz-feedback").style.display = "none";
+  document.getElementById("quiz-feedback").innerHTML = "";
+
+  document.getElementById("next-question").style.display = "none";
+  document.getElementById("check-answer").style.display = "inline-flex";
+}
+
+function checkAnswer() {
+  if (selectedAnswer === null) {
+    alert("Bitte zuerst eine Antwort auswählen.");
+    return;
+  }
+
+  const q = currentQuestions[currentIndex];
+  const buttons = document.querySelectorAll("#quiz-answers button");
+
+  buttons.forEach((button, index) => {
+    button.disabled = true;
+    button.style.cursor = "default";
+
+    if (index === q.correct) {
+      button.style.borderColor = "#1e6b44";
+      button.style.background = "#e7f3ec";
+    }
+
+    if (index === selectedAnswer && selectedAnswer !== q.correct) {
+      button.style.borderColor = "#b3261e";
+      button.style.background = "#fdecea";
+    }
+  });
+
+  const feedback = document.getElementById("quiz-feedback");
+
+  if (selectedAnswer === q.correct) {
+    score++;
+    feedback.innerHTML = `
+      <strong style="color:#1e6b44; font-size:1.1rem;">✓ Richtig!</strong>
+      <div style="margin-top:12px;">
+        <strong style="color:var(--tief);">SCHON GEWUSST?</strong>
+        <p style="margin:7px 0 0; line-height:1.6;">${q.info}</p>
+      </div>
+    `;
+  } else {
+    feedback.innerHTML = `
+      <strong style="color:#b3261e; font-size:1.1rem;">Fast!</strong>
+      <p style="margin:8px 0 0;">
+        Richtig ist: <strong>${q.answers[q.correct]}</strong>
+      </p>
+      <div style="margin-top:14px;">
+        <strong style="color:var(--tief);">SCHON GEWUSST?</strong>
+        <p style="margin:7px 0 0; line-height:1.6;">${q.info}</p>
+      </div>
+    `;
+  }
+
+  feedback.style.display = "block";
+
+  document.getElementById("check-answer").style.display = "none";
+  document.getElementById("next-question").style.display = "inline-flex";
+
+  if (currentIndex === currentQuestions.length - 1) {
+    document.getElementById("next-question").textContent = "Ergebnis anzeigen →";
+  } else {
+    document.getElementById("next-question").textContent = "Nächste Frage →";
+  }
+}
+
+function nextQuestion() {
+  currentIndex++;
+
+  if (currentIndex >= currentQuestions.length) {
+    showResult();
+    return;
+  }
+
+  renderQuestion();
+
+  document.getElementById("quiz-game").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+function showResult() {
+  let title = "";
+  let text = "";
+
+  if (score === 15) {
+    title = "🦢 UHLENHORST-LEGENDE";
+    text = "15 von 15. Dir macht auf der Uhlenhorst so schnell keiner etwas vor.";
+  } else if (score >= 13) {
+    title = "UHLENHORST-EXPERTE";
+    text = "Dir entgeht auf der Uhlenhorst nicht viel.";
+  } else if (score >= 8) {
+    title = "UHLENHORST-INSIDER";
+    text = "Du kennst die Uhlenhorst ziemlich gut.";
+  } else {
+    title = "UHLENHORST-ENTDECKER";
+    text = "Da gibt es noch einiges zu entdecken.";
+  }
+
+  document.getElementById("quiz-game").innerHTML = `
+    <div style="max-width:820px; margin:0 auto; text-align:center;">
+
+      <div style="
+        border:1px solid #dfe5ea;
+        border-radius:10px;
+        padding:42px 28px;
+        background:#fff;
+      ">
+
+        <div style="
+          font-size:1rem;
+          color:#587080;
+          margin-bottom:8px;
+        ">
+          DEIN ERGEBNIS
+        </div>
+
+        <div style="
+          font-size:3rem;
+          font-weight:700;
+          color:var(--wasser);
+          margin-bottom:8px;
+        ">
+          ${score} / ${currentQuestions.length}
+        </div>
+
+        <h2 style="
+          color:var(--tief);
+          margin:0 0 12px;
+          font-size:2rem;
+        ">
+          ${title}
+        </h2>
+
+        <p style="
+          margin:0 0 26px;
+          line-height:1.6;
+          color:#456;
+        ">
+          ${text}
+        </p>
+
+        <button class="quiz-start"
+                onclick="location.reload()">
+          Andere Stufe wählen
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+</script>
 </body>
 </html>
