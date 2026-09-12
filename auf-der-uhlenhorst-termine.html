@@ -33,14 +33,14 @@
   }
   .nav-wrap {
     max-width: 1100px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; justify-content: flex-start;
     padding: 16px 28px; gap: 12px; flex-wrap: nowrap;
   }
-  .logo { color: var(--white); font-size: 1.2rem; display: flex; align-items: baseline; gap: 8px; flex-shrink: 0; white-space: nowrap; }
+  .logo { color: var(--white); font-size: 1.2rem; display: flex; align-items: baseline; gap: 8px; flex-shrink: 0; white-space: nowrap; margin-left: auto; }
   .logo em { font-style: italic; color: var(--gold); }
   nav.main-nav a { color: rgba(255,255,255,0.75); }
 nav.main-nav a:hover, nav.main-nav a.active { color: var(--gold); }
-  .auth-area { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .auth-area { display: flex; align-items: center; gap: 12px; flex-shrink: 0; margin-left: 18px; }
   .btn { padding: 9px 18px; border-radius: 5px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; white-space: nowrap; }
 .btn-gold {
   background: transparent;
@@ -263,7 +263,6 @@ main { max-width: 1100px; margin: 0 auto; padding: 36px 28px 80px; position: rel
 
 <header>
   <div class="nav-wrap">
-    <a href="auf-der-uhlenhorst-home.html" class="logo"><img src="logo-schwan-weiss.png" alt="Auf der Uhlenhorst" style="height:58px; width:auto; display:block;"></a>
     <nav class="main-nav" style="display:flex; gap:24px;">
       <a href="auf-der-uhlenhorst-verzeichnis.html" style=" font-size:0.88rem; font-weight:500;">Geschäfte</a>
       <a href="auf-der-uhlenhorst-termine.html" style="color:var(--gold); font-size:0.88rem; font-weight:600;">Moin Uhlenhorst</a>
@@ -275,6 +274,8 @@ main { max-width: 1100px; margin: 0 auto; padding: 36px 28px 80px; position: rel
     <div class="auth-area" id="authArea">
       <button class="btn btn-ghost" onclick="window.location.href='auf-der-uhlenhorst-login.html'">Anmelden</button>
     </div>
+        <a href="auf-der-uhlenhorst-home.html" class="logo"><img src="logo-schwan-weiss.png" alt="Auf der Uhlenhorst" style="height:58px; width:auto; display:block;"></a>
+
   </div>
 </header>
 
