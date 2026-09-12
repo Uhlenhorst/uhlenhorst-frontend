@@ -304,7 +304,7 @@
       <div class="quiz-card-body">
         <h2>INSIDER</h2>
         <p>15 Fragen für alle, die mehr wissen wollen.</p>
-        <button class="quiz-start">Quiz starten →</button>
+<button class="quiz-start" onclick="startQuiz('insider')">Quiz starten →</button>
       </div>
     </article>
 
@@ -560,6 +560,174 @@ const quizData = {
       ],
       correct: 0,
       info: "Auf der gegenüberliegenden Seite der Außenalster liegt unter anderem Harvestehude."
+    }
+   ],
+
+  insider: [
+    {
+      question: "Wie sah ein großer Teil der Uhlenhorst Anfang des 19. Jahrhunderts aus?",
+      answers: [
+        "Sumpfiges Wiesenland",
+        "Dicht bebautes Wohngebiet",
+        "Industriegelände",
+        "Geschlossener Wald"
+      ],
+      correct: 0,
+      info: "Große Teile der späteren Uhlenhorst waren feuchtes, schwer bebaubares Gelände. Erst Entwässerung, Aufschüttung und planmäßige Erschließung machten daraus einen Stadtteil."
+    },
+    {
+      question: "In welchem Jahr kauften Hamburger Unternehmer große Teile der Uhlenhorst?",
+      answers: [
+        "1837",
+        "1789",
+        "1871",
+        "1901"
+      ],
+      correct: 0,
+      info: "1837 begann die planmäßige Erschließung großer Flächen der Uhlenhorst durch private Unternehmer."
+    },
+    {
+      question: "Welche drei Männer spielten bei der Erschließung der Uhlenhorst eine wichtige Rolle?",
+      answers: [
+        "Abendroth, Heine und Jencquel",
+        "Blohm, Voss und Laeisz",
+        "Ballin, Warburg und Hagenbeck",
+        "Schumacher, Schmidt und Behn"
+      ],
+      correct: 0,
+      info: "August Abendroth, Carl Heine und Adolph Jencquel gehörten zu den maßgeblichen Akteuren bei der Erschließung der Uhlenhorst."
+    },
+    {
+      question: "Was waren die sogenannten „Uhlenhorster Bedingungen“?",
+      answers: [
+        "Vorgaben für Bebauung und Nutzung",
+        "Regeln für Alsterdampfer",
+        "Bedingungen für Segelregatten",
+        "Vorschriften für den Wochenmarkt"
+      ],
+      correct: 0,
+      info: "Mit den Uhlenhorster Bedingungen wurde festgelegt, wie bestimmte Flächen genutzt und bebaut werden sollten."
+    },
+    {
+      question: "Welche Nutzung sollte in besonders hochwertigen Teilen möglichst ferngehalten werden?",
+      answers: [
+        "Industrie und störendes Gewerbe",
+        "Wohnhäuser",
+        "Gärten",
+        "Schulen"
+      ],
+      correct: 0,
+      info: "Die Planung zielte auf einen gehobenen Wohncharakter. Deshalb sollten störende Nutzungen in bestimmten Bereichen vermieden werden."
+    },
+    {
+      question: "Welche Katastrophe von 1842 hatte indirekt Einfluss auf die weitere Entwicklung der Uhlenhorst?",
+      answers: [
+        "Der Große Hamburger Brand",
+        "Die Sturmflut von 1962",
+        "Die Choleraepidemie von 1892",
+        "Der Erste Weltkrieg"
+      ],
+      correct: 0,
+      info: "Nach dem Großen Hamburger Brand von 1842 wurde die Stadtentwicklung neu geordnet. Auch Veränderungen am Alstersystem wirkten sich auf die Erschließung angrenzender Gebiete aus."
+    },
+    {
+      question: "Was geschah im 19. Jahrhundert mit dem Wasserspiegel der Alster?",
+      answers: [
+        "Er wurde abgesenkt",
+        "Er wurde stark angehoben",
+        "Die Alster wurde trockengelegt",
+        "Sie wurde vollständig kanalisiert"
+      ],
+      correct: 0,
+      info: "Die Absenkung des Alsterspiegels half dabei, angrenzende Flächen trockener und besser nutzbar zu machen."
+    },
+    {
+      question: "Welche frühe Verkehrsform ist eng mit der Uhlenhorst verbunden?",
+      answers: [
+        "Alster-Dampfschifffahrt",
+        "Hamburger Hochbahn",
+        "Hafenfähren auf der Elbe",
+        "Pferdebahn nach Altona"
+      ],
+      correct: 0,
+      info: "Die Alsterschifffahrt wurde früh zu einem wichtigen Verkehrsmittel zwischen den Wohngebieten an der Alster und der Innenstadt."
+    },
+    {
+      question: "Wie viele Fahrgäste nutzten die Alsterschifffahrt bereits 1911 ungefähr pro Jahr?",
+      answers: [
+        "Mehr als 10 Millionen",
+        "Etwa 500.000",
+        "Rund 2 Millionen",
+        "Weniger als 100.000"
+      ],
+      correct: 0,
+      info: "Die Alsterdampfer waren damals kein reines Freizeitangebot, sondern ein stark genutztes Verkehrsmittel."
+    },
+    {
+      question: "Welche internationale Sporttradition begann bereits 1892 auf der Uhlenhorst?",
+      answers: [
+        "Ein internationales Tennisturnier",
+        "Der Hamburger Marathon",
+        "Das Deutsche Derby",
+        "Ein internationales Ruderrennen"
+      ],
+      correct: 0,
+      info: "Die Wurzeln des späteren internationalen Hamburger Tennisturniers reichen bis zu Wettbewerben auf der Uhlenhorst zurück."
+    },
+    {
+      question: "Welche ungewöhnliche Doppelnutzung gab es auf einer Sportfläche der Uhlenhorst?",
+      answers: [
+        "Im Winter Eisbahn, im Sommer Tennis",
+        "Im Winter Hockey, im Sommer Pferderennen",
+        "Im Winter Curling, im Sommer Fußball",
+        "Im Winter Markt, im Sommer Rudern"
+      ],
+      correct: 0,
+      info: "Der historische Eisbahn-Verein auf der Uhlenhorst nutzte seine Fläche im Sommer unter anderem für Tennis."
+    },
+    {
+      question: "Wann wurde Uhlenhorst offiziell Hamburger Stadtteil?",
+      answers: [
+        "1894",
+        "1837",
+        "1871",
+        "1937"
+      ],
+      correct: 0,
+      info: "1894 wurde Uhlenhorst offiziell Hamburger Stadtteil."
+    },
+    {
+      question: "Welchen Status hatte Uhlenhorst zuvor seit 1871?",
+      answers: [
+        "Hamburger Vorort",
+        "Preußische Gemeinde",
+        "Freie Stadt",
+        "Teil von Altona"
+      ],
+      correct: 0,
+      info: "Vor der endgültigen Eingliederung als Stadtteil war Uhlenhorst als Hamburger Vorort geführt."
+    },
+    {
+      question: "Wozu diente bereits 1711 ein Landhaus im Bereich Feenteich und Langer Zug?",
+      answers: [
+        "Zur Bewirtung von Ratsgästen",
+        "Als Gefängnis",
+        "Als Zollstation",
+        "Als Schule"
+      ],
+      correct: 0,
+      info: "Schon früh hatte der Bereich rund um den Feenteich eine repräsentative Funktion für Gäste der Stadt."
+    },
+    {
+      question: "Welche Tradition setzt das Gästehaus des Senats an der Schönen Aussicht fort?",
+      answers: [
+        "Die Bewirtung und Unterbringung offizieller Gäste",
+        "Die Nutzung als Schule",
+        "Die Nutzung als Hafenverwaltung",
+        "Die Nutzung als Markthalle"
+      ],
+      correct: 0,
+      info: "Die Gegend um den Feenteich ist seit Jahrhunderten mit der Bewirtung und Unterbringung offizieller Gäste verbunden."
     }
   ]
 };
