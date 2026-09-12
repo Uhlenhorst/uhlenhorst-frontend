@@ -23,13 +23,13 @@
 
   /* === Shared header/nav === */
   header { background: var(--deep); border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 100; }
-  .nav-wrap { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; gap: 24px; }
-  .logo { color: var(--white); font-size: 1.15rem; display: flex; align-items: baseline; gap: 8px; flex-shrink: 0; }
+  .nav-wrap { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; justify-content: flex-start; padding: 16px 28px; gap: 24px; }
+  .logo { color: var(--white); font-size: 1.15rem; display: flex; align-items: baseline; gap: 8px; flex-shrink: 0; margin-left: auto; }
   .logo em { font-style: italic; color: var(--gold); }
   nav.main-nav { display: flex; gap: 26px; }
   nav.main-nav a { color: rgba(255,255,255,0.75); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; white-space: nowrap; }
   nav.main-nav a:hover, nav.main-nav a.active { color: var(--gold); }
-  .auth-area { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .auth-area { display: flex; align-items: center; gap: 12px; flex-shrink: 0; margin-left: 18px; }
   .btn { padding: 9px 18px; border-radius: 5px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
   .btn-gold { background: transparent; color: var(--white); border: 2px solid var(--gold); }
 .btn-gold:hover { background: var(--gold); }  
@@ -102,7 +102,6 @@
 
 <header>
   <div class="nav-wrap">
-    <a href="auf-der-uhlenhorst-home.html" class="logo"><img src="logo-schwan-weiss.png" alt="Auf der Uhlenhorst" style="height:58px; width:auto; display:block;"></a>
     <nav class="main-nav">
       <a href="auf-der-uhlenhorst-verzeichnis.html">Geschäfte</a>
       <a href="auf-der-uhlenhorst-termine.html">Moin Uhlenhorst</a>
@@ -114,6 +113,8 @@
     <div class="auth-area" id="authArea">
       <button class="btn btn-ghost" onclick="window.location.href='auf-der-uhlenhorst-login.html'">Anmelden</button>
     </div>
+        <a href="auf-der-uhlenhorst-home.html" class="logo"><img src="logo-schwan-weiss.png" alt="Auf der Uhlenhorst" style="height:58px; width:auto; display:block;"></a>
+
   </div>
 </header>
 
