@@ -312,7 +312,7 @@
       <div class="quiz-card-body">
         <h2>GEHEIMNISSE</h2>
         <p>15 Fragen für echte Entdecker – mit überraschenden Geschichten und weniger bekannten Fakten.</p>
-        <button class="quiz-start">Quiz starten →</button>
+<button class="quiz-start" onclick="startQuiz('geheimnisse')">Quiz starten →</button>
       </div>
     </article>
 
@@ -728,6 +728,174 @@ const quizData = {
       ],
       correct: 0,
       info: "Die Gegend um den Feenteich ist seit Jahrhunderten mit der Bewirtung und Unterbringung offizieller Gäste verbunden."
+    }
+    ],
+
+  geheimnisse: [
+        {
+      question: "Wozu wurde 1837 eigens die „Landunternehmung Uhlenhorst“ gegründet?",
+      answers: [
+        "Zur Erwerbung und Erschließung von Grundstücken",
+        "Zum Betrieb der Alsterdampfer",
+        "Zum Bau einer Eisenbahn",
+        "Zur Organisation von Segelregatten"
+      ],
+      correct: 0,
+      info: "Hinter der Entwicklung der Uhlenhorst stand tatsächlich ein unternehmerisches Großprojekt. August Abendroth, Carl Heine und Adolph Jencquel erschlossen große Flächen systematisch als neues Wohngebiet."
+    },
+    {
+      question: "Was machten Mitglieder des historischen Eisbahn-Vereins auf der Uhlenhorst im Sommer?",
+      answers: [
+        "Sie spielten Tennis",
+        "Sie veranstalteten Pferderennen",
+        "Sie betrieben einen Wochenmarkt",
+        "Sie spielten Fußball"
+      ],
+      correct: 0,
+      info: "Aus Eis und Tennis entstand eine ungewöhnliche Sportgeschichte: Die Fläche wurde außerhalb der Eislaufsaison für Tennis genutzt."
+    },
+    {
+      question: "Wo liegen die Wurzeln des internationalen Hamburger Tennisturniers?",
+      answers: [
+        "Auf der Uhlenhorst",
+        "In Blankenese",
+        "In Eimsbüttel",
+        "In Altona"
+      ],
+      correct: 0,
+      info: "Bereits 1892 wurde auf der Uhlenhorst ein internationales Tennisturnier ausgetragen. Damit führt eine überraschende historische Linie von der Uhlenhorst zum späteren großen Hamburger Tennisturnier."
+    },
+    {
+      question: "Was war beim Tennissport auf der Uhlenhorst schon im Kaiserreich bemerkenswert?",
+      answers: [
+        "Auch Frauen konnten Tennis spielen",
+        "Es wurde ausschließlich nachts gespielt",
+        "Schläger waren zunächst verboten",
+        "Gespielt wurde nur im Winter"
+      ],
+      correct: 0,
+      info: "Tennis gehörte zu den Sportarten, die vergleichsweise früh auch Frauen offenstanden – für die damalige Sportwelt durchaus bemerkenswert."
+    },
+    {
+      question: "Wie wurde feuchtes Gelände auf der Uhlenhorst für die Bebauung nutzbar gemacht?",
+      answers: [
+        "Durch Entwässerung und Aufschüttung",
+        "Durch den Bau eines einzigen großen Deiches",
+        "Durch vollständige Überdachung der Wasserläufe",
+        "Durch natürliche Austrocknung ohne Eingriffe"
+      ],
+      correct: 0,
+      info: "Die heutige Uhlenhorst ist teilweise das Ergebnis erheblicher Eingriffe in die Landschaft. Wasserläufe wurden verändert, Flächen entwässert und Gelände aufgeschüttet."
+    },
+    {
+      question: "Was geschah teilweise mit dem Aushub bei der Erschließung der Uhlenhorst?",
+      answers: [
+        "Er wurde zur Aufschüttung von Gelände verwendet",
+        "Er wurde ausschließlich in die Nordsee gebracht",
+        "Er wurde zu Straßenpflaster verarbeitet",
+        "Er wurde vollständig nach Altona verkauft"
+      ],
+      correct: 0,
+      info: "Material aus Erdarbeiten konnte zur Aufhöhung tiefer und feuchter Flächen genutzt werden. So wurde aus schwierigem Gelände wertvolles Bauland."
+    },
+    {
+      question: "Welches Ziel hatte die historische Planung einer Ringstraße rund um die Außenalster?",
+      answers: [
+        "Den öffentlichen Zugang zum Alsterufer zu sichern",
+        "Eine Rennstrecke für Pferde anzulegen",
+        "Das Ufer ausschließlich Privatgrundstücken zuzuschlagen",
+        "Eine Güterbahn rund um die Alster zu bauen"
+      ],
+      correct: 0,
+      info: "Der Zugang zur Alster sollte nicht vollständig hinter privaten Grundstücken verschwinden. Die öffentliche Erlebbarkeit des Ufers wurde damit zu einem wichtigen Teil der Stadtplanung."
+    },
+    {
+      question: "Was gab es bereits 1711 im Bereich zwischen Feenteich und Langem Zug?",
+      answers: [
+        "Ein Landhaus zur Bewirtung von Ratsgästen",
+        "Eine große Industrieanlage",
+        "Einen Hauptbahnhof",
+        "Eine Universität"
+      ],
+      correct: 0,
+      info: "Der Bereich am Feenteich hatte schon vor mehr als 300 Jahren eine repräsentative Funktion. Dort wurden Gäste des Hamburger Rates bewirtet."
+    },
+    {
+      question: "Welche frühere soziale Einrichtung hinterließ denkmalgeschützte Gebäude in der Averhoffstraße?",
+      answers: [
+        "Ein Waisenhaus",
+        "Ein Gefängnis",
+        "Eine Kaserne",
+        "Ein Zollamt"
+      ],
+      correct: 0,
+      info: "In der Averhoffstraße erinnern historische Gebäude an eine frühere Waisenhausanlage. Viele gehen heute daran vorbei, ohne diese Geschichte zu kennen."
+    },
+    {
+      question: "Aus welchem Jahr stammt eine historische Hamburger Katasterkarte speziell der Uhlenhorst?",
+      answers: [
+        "1908",
+        "1758",
+        "1858",
+        "1958"
+      ],
+      correct: 0,
+      info: "Eine historische Katasterkarte von 1908 dokumentiert die damalige Struktur der Uhlenhorst und macht Veränderungen des Viertels besonders anschaulich."
+    },
+    {
+      question: "Welches früher bekannte Ausflugsziel an der Alster verschwand im 20. Jahrhundert?",
+      answers: [
+        "Das Uhlenhorster Fährhaus",
+        "Das Literaturhaus",
+        "St. Gertrud",
+        "Das Gästehaus des Senats"
+      ],
+      correct: 0,
+      info: "Das Uhlenhorster Fährhaus gehörte einst zur Ausflugskultur an der Alster. Das historische Gebäude existiert heute nicht mehr."
+    },
+    {
+      question: "Welche Rolle spielten die Alsterdampfer früher vor allem?",
+      answers: [
+        "Sie waren ein wichtiges öffentliches Verkehrsmittel",
+        "Sie dienten ausschließlich Staatsgästen",
+        "Sie waren nur für Segelvereine bestimmt",
+        "Sie transportierten ausschließlich Waren"
+      ],
+      correct: 0,
+      info: "Heute denkt man bei Alsterfahrten vor allem an Freizeit und Tourismus. Früher waren die Dampfer ein echtes Verkehrsmittel für den täglichen Personenverkehr."
+    },
+    {
+      question: "Was verbirgt sich hinter der Adresse Schöne Aussicht 26?",
+      answers: [
+        "Das Gästehaus des Hamburger Senats",
+        "Die ehemalige Hauptpost",
+        "Ein historischer Bahnhof",
+        "Das Hamburger Staatsarchiv"
+      ],
+      correct: 0,
+      info: "Hinter der diskreten Adresse liegt das Gästehaus des Senats. Hier wurden im Laufe der Zeit hochrangige Gäste der Stadt empfangen."
+    },
+    {
+      question: "Was war das Gebäude der heutigen Alsterperle ursprünglich?",
+      answers: [
+        "Eine öffentliche Bedürfnisanstalt",
+        "Eine Zollstation",
+        "Eine Fischerhütte",
+        "Eine Bootswerkstatt"
+      ],
+      correct: 0,
+      info: "Das ist eine der schönsten Verwandlungen an der Außenalster: Aus einer ehemaligen öffentlichen Bedürfnisanstalt wurde ein äußerst beliebter Treffpunkt am Wasser."
+    },
+    {
+      question: "Welche Aussage über die historische Uhlenhorst ist falsch?",
+      answers: [
+        "Sie war bereits im Mittelalter ein dicht bebautes Wohnviertel",
+        "Teile des Geländes mussten entwässert werden",
+        "Die Uhlenhorst spielte früh eine Rolle in der Hamburger Tennisgeschichte",
+        "Die Alsterschifffahrt war früher ein wichtiges Verkehrsmittel"
+      ],
+      correct: 0,
+      info: "Die Uhlenhorst entwickelte sich erst wesentlich später zum dicht bebauten Stadtteil. Gerade die Umwandlung feuchter Flächen in begehrtes Wohngebiet gehört zu ihrer besonderen Geschichte."
     }
   ]
 };
