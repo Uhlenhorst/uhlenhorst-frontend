@@ -63,53 +63,14 @@ background: var(--gold);
   .footer-inner { max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
   .footer-inner .fname { color: var(--white); font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.1rem; }
   .footer-inner span { font-size: 0.85rem; }
-
-  @media (max-width: 880px) {
-  .feature-grid { grid-template-columns: 1fr 1fr; }
-
-  .nav-wrap {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
+@media (max-width: 880px) {
+  .feature-grid {
+    grid-template-columns: 1fr 1fr;
   }
-
-  .logo {
-  order: -1 !important;
-  margin-left: 0 !important;
-  width: 100%;
-  justify-content: center;
-}
-    .uh-header-actions {
-  order: 2 !important;
-  width: 100% !important;
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 8px !important;
-}
-
-  .main-nav {
-  order: 2;
-  width: 100%;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-    .main-nav a {
-  flex: 0 1 auto;
-  white-space: nowrap;
-}
-    @media (max-width: 880px) {
-
-  ... deine bisherigen mobilen Regeln ...
 
   .nav-wrap {
     display: grid !important;
-    grid-template-columns: auto auto;
+    grid-template-columns: max-content max-content;
     justify-content: center;
     align-items: center;
     gap: 12px 8px;
@@ -120,6 +81,7 @@ background: var(--gold);
     grid-row: 1;
     justify-self: center;
     margin-left: 0 !important;
+    width: auto;
   }
 
   .quiz-btn {
@@ -132,6 +94,9 @@ background: var(--gold);
     grid-row: 2;
   }
 
+  .uh-header-actions {
+    display: none !important;
+  }
 }
   @media (max-width: 540px) {
     .feature-grid { grid-template-columns: 1fr; }
