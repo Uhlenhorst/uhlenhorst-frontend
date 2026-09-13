@@ -80,11 +80,18 @@ background: var(--gold);
   }
 
   .main-nav {
-    order: 2;
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
+  order: 2;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+    .main-nav a {
+  flex: 0 1 auto;
+  white-space: nowrap;
+}
 }
   @media (max-width: 540px) {
     .feature-grid { grid-template-columns: 1fr; }
