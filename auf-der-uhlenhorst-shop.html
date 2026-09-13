@@ -161,9 +161,28 @@ nav.main-nav a:hover, nav.main-nav a.active { color: var(--gold); }
   @media (max-width: 480px) {
     .cart-drawer { width: 100%; right: -100%; }
   }
-  @media (max-width: 700px) {
+  @media (max-width: 880px) {
     .main-nav { display: none !important; }
   }
+  .nav-wrap {
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.logo {
+  order: -1 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: fit-content !important;
+  justify-content: center !important;
+  align-self: center !important;
+}
+
+.logo img {
+  display: block;
+  margin: 0 auto;
+}
  footer {
   background: #10245c;
   color: #fff;
