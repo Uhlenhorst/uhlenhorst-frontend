@@ -311,10 +311,20 @@
   }
   .btn-logout:hover { border-color: var(--water); color: var(--water); }
 
-  @media (max-width: 720px) {
+  @media (max-width: 880px) {
     .wrap { grid-template-columns: 1fr; }
     .brand-panel { padding: 36px 30px; }
     .anleger-mini { display: none; }
+    .brand-panel > div:first-child > a {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100%;
+}
+
+.brand-panel > div:first-child > a img {
+  display: block;
+  margin: 0 auto;
+}
   }
 </style>
 </head>
